@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card-bg: #151a2e;
+      --text: #e7ecf3;
+      --muted: #b6c2d1;
+      --accent: #4f8cff;
+      --accent-2: #00d4a6;
+      --ring: rgba(79, 140, 255, 0.5);
+    }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #12203a, transparent),
+        radial-gradient(800px 500px at 110% 10%, #1b2b50, transparent),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 28px 20px 64px; }
+
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .title { font-size: 28px; font-weight: 750; letter-spacing: 0.2px; }
+    .subtitle { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+    .search { width: 320px; position: relative; }
+    .search input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      background: #0f1528;
+      border: 1px solid #223055;
+      border-radius: 10px;
+      color: var(--text);
+      outline: none;
+      transition: border .2s, box-shadow .2s, background .2s;
+    }
+    .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); background: #0e1426; }
+    .search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); opacity: 0.8; fill: #9bb0d3; }
+
+    .section { margin: 22px 0 10px; font-weight: 600; color: #9fb3d9; letter-spacing: .2px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .card {
+      display: block;
+      background: linear-gradient(180deg, #141a30, #10162a);
+      border: 1px solid #243359;
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 126px;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      transition: transform .14s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .card:hover { transform: translateY(-1px); border-color: #2f437b; box-shadow: 0 10px 24px rgba(3, 10, 35, 0.35); }
+    .card:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #9bb0d3; background: rgba(79, 140, 255, 0.12); border: 1px solid #2a3f72; padding: 4px 8px; border-radius: 999px; }
+    .card h3 { margin: 10px 0 6px; font-size: 18px; }
+    .card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .glow { position: absolute; inset: -40%; background: radial-gradient(350px 120px at var(--x,50%) var(--y,50%), rgba(79,140,255,0.18), transparent 60%), radial-gradient(300px 120px at calc(var(--x,50%) + 100px) calc(var(--y,50%) + 40px), rgba(0,212,166,0.15), transparent 60%); pointer-events: none; transition: opacity .25s; opacity: 0; }
+    .card:hover .glow { opacity: 1; }
+
+    footer { margin-top: 36px; color: #8ea3c3; font-size: 12px; opacity: 0.9; }
+
+    @media (max-width: 640px) {
+      header { flex-direction: column; align-items: stretch; }
+      .search { width: 100%; }
+    }
+
+    /* Quick-launch widget for Pack Profit Game */
+    .widget-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(180deg, #141a30, #10162a);
+      color: inherit;
+      border: 1px solid #243359;
+      border-radius: 12px;
+      padding: 10px 12px;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(3, 10, 35, 0.35);
+      transition: transform .14s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+      z-index: 10;
+    }
+    .widget-fab:hover {
+      transform: translateY(-1px);
+      border-color: #2f437b;
+      background: #121833;
+    }
+    .widget-fab:focus-visible {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--ring), 0 10px 24px rgba(3, 10, 35, 0.35);
+    }
+    .widget-fab .icon { font-size: 16px; }
+    .widget-fab .label { font-weight: 600; font-size: 14px; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Home page to navigate to all site pages.">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="title">Welcome</div>
+        <div class="subtitle">Explore all pages in this project</div>
+      </div>
+      <label class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.53 20.47l-3.66-3.66A8.5 8.5 0 1019 17l3.66 3.66a.75.75 0 11-1.06 1.06zM10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"/></svg>
+        <input id="search" type="search" placeholder="Filter pages..." aria-label="Filter pages">
+      </label>
+    </header>
+
+    <div class="section">All Pages</div>
+    <div class="grid" id="cards" role="list"></div>
+
+    <footer>
+      Tip: Use the search box to quickly find a page. Press Enter to focus the first result.
+    </footer>
+  </div>
+
+  <a class="widget-fab" href="./packs-econ.html" aria-label="Open Pack Profit Game">
+    <span class="icon">💹</span>
+    <span class="label">Pack Profit Game</span>
+  </a>
+
+  <script>
+    const pages = [
+      { title: "Pokémon", href: "./pokemon.html", badge: "App", icon: "🐾", description: "Browse Pokémon data and details." },
+      { title: "Pack Profit Game (AP Econ)", href: "./packs-econ.html", badge: "Econ", icon: "💹", description: "Open 10 packs and compute costs & profits." }
+    ];
+
+    const grid = document.getElementById("cards");
+
+    function render(list) {
+      grid.innerHTML = "";
+      for (const p of list) {
+        const a = document.createElement("a");
+        a.className = "card";
+        a.href = p.href;
+        a.role = "listitem";
+        a.innerHTML =
+          '<div class="badge" aria-hidden="true"><span>' + p.icon + '</span><span>' + p.badge + '</span></div>' +
+          "<h3>" + p.title + "</h3>" +
+          "<p>" + p.description + "</p>" +
+          '<div class="glow"></div>';
+        a.addEventListener("pointermove", (e) => {
+          const rect = a.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100 + "%";
+          const y = ((e.clientY - rect.top) / rect.height) * 100 + "%";
+          a.style.setProperty("--x", x);
+          a.style.setProperty("--y", y);
+        });
+        grid.appendChild(a);
+      }
+    }
+
+    render(pages);
+
+    const input = document.getElementById("search");
+    input.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      if (!q) { render(pages); return; }
+      const filtered = pages.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        p.badge.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q)
+      );
+      render(filtered);
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const first = grid.querySelector(".card");
+        if (first) first.focus();
+      }
+    });
+  </script>
+</body>
+</html>
+
+ 
