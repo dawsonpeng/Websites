@@ -23,8 +23,27 @@
     <div class="eyebrow-red">AP Economics</div>
     <h1>Pack Profit Game</h1>
     <p class="lead">Practice real-world economic thinking with chance and tradeoffs. Open 10 Pokémon packs, total the card values (revenue), and then calculate implicit cost (forgone wage), explicit cost (pack spending), accounting profit, and total (economic) profit. This mirrors decisions people make when chasing collectibles or investing: comparing expected value to price and remembering opportunity cost. You’ll reinforce AP Econ vocabulary and the actual calculations while experiencing risk and reward firsthand. We also track a global loss rate across all players and how many full runs are globally completed.</p>
-    <div id="loss-stats" class="alert info">Global loss rate: —</div>
-    <div id="your-loss" class="badge">Your loss rate: 0% (0 of 0)</div>
+    <div id="loss-stats" class="alert info">Global win rate: —</div>
+    <div id="your-win" class="badge">Your win rate: 0% (0 of 0)</div>
+
+    <div class="card" id="set-stats-card">
+      <div class="cluster">
+        <h2 style="margin:0">Set Win Rates</h2>
+        <div class="right" style="display:flex; gap:8px; align-items:center;">
+          <button id="toggle-set-stats" class="btn btn-ghost btn-small" type="button">Hide</button>
+          <button id="refresh-set-stats" class="btn btn-outline btn-small" type="button">Refresh</button>
+        </div>
+      </div>
+      <div id="set-stats-content" class="hidden">
+        <table>
+          <thead>
+            <tr><th>Set</th><th>Win rate</th><th>Wins</th><th>Total</th></tr>
+          </thead>
+          <tbody id="set-stats-body"></tbody>
+        </table>
+        <div id="set-stats-hint" class="muted">Stats update live when runs complete. Click Refresh if needed.</div>
+      </div>
+    </div>
 
     <div class="card">
       <h2>1) Your random job</h2>
@@ -49,6 +68,8 @@
           </div>
           <div class="cluster">
             <button class="btn btn-primary" id="open-btn" type="button" disabled>Open 10 packs</button>
+            <button class="btn btn-outline" id="open-all-btn" type="button" disabled>Open all 10</button>
+            <button class="btn btn-outline" id="reset-top-btn" type="button" disabled>Reset</button>
           </div>
           <div class="alert info" role="status">Cards are simulated using rarity-based probabilities within the selected set.</div>
         </div>
@@ -171,6 +192,8 @@
     const setSelect = document.getElementById("set-select");
     const packPriceHint = document.getElementById("pack-price-hint");
     const openBtn = document.getElementById("open-btn");
+    const openAllBtn = document.getElementById("open-all-btn");
+    const resetTopBtn = document.getElementById("reset-top-btn");
     const resetBtn = document.getElementById("reset-btn");
     const packsArea = document.getElementById("packs-area");
     const packsOpenedBadge = document.getElementById("packs-opened-badge");
@@ -186,7 +209,11 @@
     const resultSummary = document.getElementById("result-summary");
     const answersBox = document.getElementById("answers-box");
     const lossStatsEl = document.getElementById("loss-stats");
-    const yourLossEl = document.getElementById("your-loss");
+    const yourWinEl = document.getElementById("your-win");
+    const setStatsBody = document.getElementById("set-stats-body");
+    const refreshSetStatsBtn = document.getElementById("refresh-set-stats");
+    const toggleSetStatsBtn = document.getElementById("toggle-set-stats");
+    const setStatsContent = document.getElementById("set-stats-content");
 
     function pickRandomJob() {
       const i = Math.floor(Math.random() * JOBS.length);
@@ -241,9 +268,12 @@
         packPriceHint.textContent = 'Pack price: ' + fmt(pp);
         openBtn.disabled = false;
         openBtn.textContent = 'Open Pack ' + (packsOpened + 1) + ' of ' + PACKS_TO_OPEN;
+        openAllBtn.disabled = false;
+        openAllBtn.textContent = 'Open all ' + (PACKS_TO_OPEN - packsOpened);
       } else {
         packPriceHint.textContent = 'Pack price: —';
         openBtn.disabled = true;
+        openAllBtn.disabled = true;
       }
     });
 
@@ -259,11 +289,27 @@
       cardsCountBadge.textContent = 'Cards: 0';
       revenueTotalEl.textContent = fmt(0);
       setSelect.disabled = false;
-      setSelect.value = '';
-      packPriceHint.textContent = 'Pack price: —';
-      openBtn.disabled = true;
       openBtn.textContent = 'Open Pack 1 of ' + PACKS_TO_OPEN;
+      openAllBtn.textContent = 'Open all ' + PACKS_TO_OPEN;
+      if (selectedSetId) {
+        const info = SETS[selectedSetId];
+        if (info) {
+          const pp = info.packPrice ?? DEFAULT_PACK_PRICE;
+          packPriceHint.textContent = 'Pack price: ' + fmt(pp);
+          openBtn.disabled = false;
+          openAllBtn.disabled = false;
+        } else {
+          packPriceHint.textContent = 'Pack price: —';
+          openBtn.disabled = true;
+          openAllBtn.disabled = true;
+        }
+      } else {
+        packPriceHint.textContent = 'Pack price: —';
+        openBtn.disabled = true;
+        openAllBtn.disabled = true;
+      }
       resetBtn.disabled = true;
+      resetTopBtn.disabled = true;
       runRecorded = false;
       [implicitInput, explicitInput, accountingInput, economicInput].forEach(i => { i.value = ''; i.disabled = true; setFieldState(i.parentElement, null, ''); });
       submitBtn.disabled = true;
@@ -276,6 +322,11 @@
       refreshPersonalLossUI();
     });
 
+    // Top reset mirrors the bottom reset
+    resetTopBtn.addEventListener('click', () => {
+      resetBtn.click();
+    });
+
     openBtn.addEventListener('click', async () => {
       const info = SETS[selectedSetId];
       if (!info || isRevealing) return;
@@ -284,8 +335,11 @@
         return;
       }
       openBtn.disabled = true;
+      openAllBtn.disabled = true;
       setSelect.disabled = true;
       resetBtn.disabled = true;
+      resetTopBtn.disabled = true;
+      resetTopBtn.disabled = true;
 
       if (!selectedSetData) {
         try {
@@ -306,6 +360,7 @@
       if (packsOpened >= PACKS_TO_OPEN) {
         openBtn.disabled = true;
         resetBtn.disabled = false;
+        resetTopBtn.disabled = false;
         return;
       }
 
@@ -322,9 +377,11 @@
         openBtn.textContent = 'All packs opened';
         openBtn.disabled = true;
         resetBtn.disabled = false;
+        resetTopBtn.disabled = false;
         [implicitInput, explicitInput, accountingInput, economicInput].forEach(i => i.disabled = false);
         submitBtn.disabled = false;
         revealBtn.disabled = false;
+        openAllBtn.disabled = true;
         // Record outcome once per completed run
         const correct = computeCorrect();
         if (correct) {
@@ -335,6 +392,9 @@
         openBtn.textContent = 'Open Pack ' + (packsOpened + 1) + ' of ' + PACKS_TO_OPEN;
         openBtn.disabled = false;
         resetBtn.disabled = false;
+        resetTopBtn.disabled = false;
+        openAllBtn.disabled = false;
+        openAllBtn.textContent = 'Open all ' + (PACKS_TO_OPEN - packsOpened);
       }
     });
 
@@ -446,12 +506,74 @@
       const docRef = firebaseDb.collection('packProfitStats').doc('global');
       docRef.onSnapshot(
         (snap) => {
-          const d = snap.exists ? (snap.data() || { total: 0, losses: 0 }) : { total: 0, losses: 0 };
-          const pct = d.total > 0 ? Math.round((d.losses / d.total) * 100) : 0;
-          lossStatsEl.textContent = 'Global loss rate: ' + pct + '% (' + d.losses + ' of ' + d.total + ' runs)';
+          const d = snap.exists ? (snap.data() || { total: 0 }) : { total: 0 };
+          const wins = typeof d.wins === 'number' ? d.wins : Math.max(0, (d.total || 0) - (d.losses || 0));
+          const pct = d.total > 0 ? Math.round((wins / d.total) * 100) : 0;
+          lossStatsEl.textContent = 'Global win rate: ' + pct + '% (' + wins + ' of ' + (d.total || 0) + ' runs)';
         },
         (e) => console.warn('Global stats listen failed', e)
       );
+      // Per-set stats
+      const setsRef = firebaseDb.collection('packSetStats');
+      setsRef.onSnapshot(
+        (snap) => {
+          const map = {};
+          snap.forEach(doc => map[doc.id] = doc.data());
+          renderSetStats(map);
+        },
+        (e) => console.warn('Set stats listen failed', e)
+      );
+    }
+
+    function renderSetStats(map) {
+      if (!setStatsBody) return;
+      const rows = [];
+      const ids = Object.keys(SETS);
+      for (const id of ids) {
+        const info = SETS[id];
+        const d = map && map[id] ? map[id] : { total: 0, wins: 0 };
+        const total = d.total || 0;
+        const wins = typeof d.wins === 'number' ? d.wins : Math.max(0, total - (d.losses || 0));
+        const pct = total > 0 ? Math.round((wins / total) * 100) : 0;
+        rows.push('<tr><td>' + info.label + '</td><td>' + pct + '%</td><td>' + wins + '</td><td>' + total + '</td></tr>');
+      }
+      setStatsBody.innerHTML = rows.join('');
+    }
+
+    if (refreshSetStatsBtn) {
+      refreshSetStatsBtn.addEventListener('click', async () => {
+        if (!firebaseDb) { renderSetStats(null); return; }
+        try {
+          const snap = await firebaseDb.collection('packSetStats').get();
+          const map = {};
+          snap.forEach(doc => map[doc.id] = doc.data());
+          renderSetStats(map);
+        } catch (e) {
+          console.warn('Manual set stats refresh failed', e);
+          renderSetStats(null);
+        }
+      });
+    }
+
+    // Collapse/expand Set Win Rates (persist preference)
+    const SET_STATS_COLLAPSED_KEY = 'pack_set_stats_collapsed_v1';
+    function isSetStatsCollapsed() {
+      try {
+        const v = localStorage.getItem(SET_STATS_COLLAPSED_KEY);
+        return v === null ? true : v === '1'; // default: collapsed
+      } catch { return true; }
+    }
+    function applySetStatsCollapsedUI() {
+      const collapsed = isSetStatsCollapsed();
+      if (setStatsContent) setStatsContent.classList.toggle('hidden', collapsed);
+      if (toggleSetStatsBtn) toggleSetStatsBtn.textContent = collapsed ? 'Show' : 'Hide';
+    }
+    if (toggleSetStatsBtn) {
+      toggleSetStatsBtn.addEventListener('click', () => {
+        const current = isSetStatsCollapsed();
+        try { localStorage.setItem(SET_STATS_COLLAPSED_KEY, (!current) ? '1' : '0'); } catch {}
+        applySetStatsCollapsedUI();
+      });
     }
 
     function getClientId() {
@@ -486,16 +608,21 @@
         const inc = window.firebase.firestore.FieldValue.increment;
         const statsRef = firebaseDb.collection('packProfitStats').doc('global');
         const clientRef = firebaseDb.collection('packClients').doc(getClientId());
-        statsRef.set({ total: inc(1), losses: inc(isLoss ? 1 : 0) }, { merge: true }).catch(() => {});
+        statsRef.set({ total: inc(1), wins: inc(isLoss ? 0 : 1), losses: inc(isLoss ? 1 : 0) }, { merge: true }).catch(() => {});
         clientRef.set({ runs: inc(1), losses: inc(isLoss ? 1 : 0), updatedAt: window.firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch(() => {});
+        // Per-set stats
+        if (selectedSetId) {
+          const setRef = firebaseDb.collection('packSetStats').doc(selectedSetId);
+          setRef.set({ total: inc(1), wins: inc(isLoss ? 0 : 1) }, { merge: true }).catch(() => {});
+        }
       }
       // Update and reflect personal cookie stats immediately
       try {
-        const raw = getCookie('pack_user_stats_v1');
-        const s = raw ? JSON.parse(raw) : { total: 0, losses: 0 };
+        const raw = getCookie('pack_user_win_stats_v1');
+        const s = raw ? JSON.parse(raw) : { total: 0, wins: 0 };
         s.total += 1;
-        if (isLoss) s.losses += 1;
-        setCookie('pack_user_stats_v1', JSON.stringify(s));
+        if (!isLoss) s.wins += 1;
+        setCookie('pack_user_win_stats_v1', JSON.stringify(s));
       } catch {}
       refreshPersonalLossUI();
       runRecorded = true;
@@ -547,6 +674,50 @@
         updateStats();
         await delay(150);
       }
+    }
+
+    function renderPackQuick(cards, index) {
+      const pack = document.createElement('div');
+      pack.className = 'pack fade-in';
+      const title = document.createElement('div');
+      title.className = 'pack-title';
+      title.textContent = 'Pack ' + index;
+      const grid = document.createElement('div');
+      grid.className = 'cards-grid';
+      pack.appendChild(title);
+      pack.appendChild(grid);
+      packsArea.insertBefore(pack, packsArea.firstChild);
+      const frag = document.createDocumentFragment();
+      let inc = 0;
+      for (const c of cards) {
+        const item = document.createElement('div');
+        item.className = 'card-item';
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = c.name;
+        img.src = c.imageUrl;
+        thumb.appendChild(img);
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const name = document.createElement('div');
+        name.className = 'name';
+        name.textContent = c.name;
+        const price = document.createElement('div');
+        price.className = 'muted';
+        const priceNum = Number(c.price || 0);
+        price.textContent = fmt(priceNum);
+        inc += priceNum;
+        meta.appendChild(name);
+        meta.appendChild(price);
+        item.appendChild(thumb);
+        item.appendChild(meta);
+        frag.appendChild(item);
+      }
+      grid.appendChild(frag);
+      revenueTotal += inc;
+      updateStats();
     }
 
     function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
@@ -608,15 +779,86 @@
       return cards;
     }
 
+    // Open all remaining packs at once (fast render)
+    openAllBtn.addEventListener('click', async () => {
+      const info = SETS[selectedSetId];
+      if (!info || isRevealing) return;
+      if (location.protocol === 'file:') {
+        alert('This page needs to be opened via a web server to load sets. Tip: use "firebase emulators:start" or a simple static server in the public/ folder.');
+        return;
+      }
+      openBtn.disabled = true;
+      openAllBtn.disabled = true;
+      setSelect.disabled = true;
+      resetBtn.disabled = true;
+
+      if (!selectedSetData) {
+        try {
+          const url = 'sets/' + info.file;
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error('Failed to load set list: ' + res.status + ' ' + res.statusText + ' @ ' + url);
+          selectedSetData = await res.json();
+        } catch (e) {
+          alert('Could not load set data. Please try again. Check console for details.');
+          console.error('Set load error:', e);
+          openBtn.disabled = false;
+          openAllBtn.disabled = false;
+          setSelect.disabled = false;
+          resetTopBtn.disabled = false;
+          return;
+        }
+      }
+      if (!buckets) buckets = buildBuckets(selectedSetData);
+
+      isRevealing = true;
+      while (packsOpened < PACKS_TO_OPEN) {
+        const packIndex = packsOpened + 1;
+        const packCards = simulatePack(buckets);
+        openedPacks.push(packCards);
+        renderPackQuick(packCards, packIndex);
+        packsOpened = packIndex;
+      }
+      isRevealing = false;
+      updateStats();
+
+      openBtn.textContent = 'All packs opened';
+      openBtn.disabled = true;
+      openAllBtn.disabled = true;
+      resetBtn.disabled = false;
+      resetTopBtn.disabled = false;
+      [implicitInput, explicitInput, accountingInput, economicInput].forEach(i => i.disabled = false);
+      submitBtn.disabled = false;
+      revealBtn.disabled = false;
+
+      const correct = computeCorrect();
+      if (correct) {
+        const isLoss = correct.economic < 0;
+        recordRunOutcome(isLoss);
+      }
+    });
+
     pickRandomJob();
     initSetSelect();
     // Stats initial
     function refreshPersonalLossUI() {
       try {
-        const raw = getCookie('pack_user_stats_v1');
-        const s = raw ? JSON.parse(raw) : { total: 0, losses: 0 };
-        const pct = s.total > 0 ? Math.round((s.losses / s.total) * 100) : 0;
-        if (yourLossEl) yourLossEl.textContent = 'Your loss rate: ' + pct + '% (' + s.losses + ' of ' + s.total + ')';
+        // Migrate old cookie format {total, losses} -> new {total, wins}
+        let raw = getCookie('pack_user_win_stats_v1');
+        if (!raw) {
+          const legacy = getCookie('pack_user_stats_v1');
+          if (legacy) {
+            try {
+              const old = JSON.parse(legacy);
+              const wins = Math.max(0, (old.total || 0) - (old.losses || 0));
+              const obj = { total: old.total || 0, wins };
+              setCookie('pack_user_win_stats_v1', JSON.stringify(obj));
+              raw = JSON.stringify(obj);
+            } catch {}
+          }
+        }
+        const s = raw ? JSON.parse(raw) : { total: 0, wins: 0 };
+        const pct = s.total > 0 ? Math.round((s.wins / s.total) * 100) : 0;
+        if (yourWinEl) yourWinEl.textContent = 'Your win rate: ' + pct + '% (' + s.wins + ' of ' + s.total + ')';
       } catch {}
     }
 
@@ -627,6 +869,9 @@
       setupFirebase();
       listenToGlobalStats();
       refreshPersonalLossUI();
+      // Always show rows for all sets even before Firestore responds
+      renderSetStats(null);
+      applySetStatsCollapsedUI();
     })();
   </script>
 </body>
