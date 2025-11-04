@@ -22,7 +22,9 @@
   <div class="container">
     <div class="eyebrow-red">AP Economics</div>
     <h1>Pack Profit Game</h1>
-    <p class="lead">Open 10 Pokémon booster packs from a set, total the card values, and compute implicit/explicit costs, accounting profit, and total (economic) profit.</p>
+    <p class="lead">Practice real-world economic thinking with chance and tradeoffs. Open 10 Pokémon packs, total the card values (revenue), and then calculate implicit cost (forgone wage), explicit cost (pack spending), accounting profit, and total (economic) profit. This mirrors decisions people make when chasing collectibles or investing: comparing expected value to price and remembering opportunity cost. You’ll reinforce AP Econ vocabulary and the actual calculations while experiencing risk and reward firsthand. We also track a global loss rate across all players and how many full runs are globally completed.</p>
+    <div id="loss-stats" class="alert info">Global loss rate: —</div>
+    <div id="your-runs" class="badge">Global completed runs: 0</div>
 
     <div class="card">
       <h2>1) Your random job</h2>
@@ -115,6 +117,12 @@
     </div>
   </div>
 
+  <!-- Firebase (optional, for global stats) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <!-- Provide your config via public/firebase-config.js which sets window.__FIREBASE_CONFIG__ -->
+  <script src="./firebase-config.js"></script>
+
   <script>
     const JOBS = [
       { name: "McDonald’s Crew Member", wage: 16.00 },
@@ -152,6 +160,9 @@
     let buckets = null;
     let packsOpened = 0;
     let isRevealing = false;
+    let runRecorded = false;
+    let firebaseDb = null;
+    let clientId = null;
 
     const jobBadge = document.getElementById("job-badge");
     const wageBadge = document.getElementById("wage-badge");
@@ -174,6 +185,8 @@
     const revealBtn = document.getElementById("reveal-btn");
     const resultSummary = document.getElementById("result-summary");
     const answersBox = document.getElementById("answers-box");
+    const lossStatsEl = document.getElementById("loss-stats");
+    const yourRunsEl = document.getElementById("your-runs");
 
     function pickRandomJob() {
       const i = Math.floor(Math.random() * JOBS.length);
@@ -237,6 +250,7 @@
       openBtn.disabled = true;
       openBtn.textContent = 'Open Pack 1 of ' + PACKS_TO_OPEN;
       resetBtn.disabled = true;
+      runRecorded = false;
       [implicitInput, explicitInput, accountingInput, economicInput].forEach(i => { i.value = ''; i.disabled = true; setFieldState(i.parentElement, null, ''); });
       submitBtn.disabled = true;
       revealBtn.disabled = true;
@@ -296,6 +310,12 @@
         [implicitInput, explicitInput, accountingInput, economicInput].forEach(i => i.disabled = false);
         submitBtn.disabled = false;
         revealBtn.disabled = false;
+        // Record outcome once per completed run
+        const correct = computeCorrect();
+        if (correct) {
+          const isLoss = correct.economic < 0;
+          recordRunOutcome(isLoss);
+        }
       } else {
         openBtn.textContent = 'Open Pack ' + (packsOpened + 1) + ' of ' + PACKS_TO_OPEN;
         openBtn.disabled = false;
@@ -349,6 +369,41 @@
       if (msgEl) msgEl.textContent = '';
     }
 
+  function computeCorrect() {
+    const info = SETS[selectedSetId];
+    if (!info) return null;
+    const implicit = round2(currentJob.wage * HOURS_SPENT);
+    const explicit = round2(PACKS_TO_OPEN * (info.packPrice ?? DEFAULT_PACK_PRICE));
+    const accounting = round2(revenueTotal - explicit);
+    const economic = round2(accounting - implicit);
+    return { implicit, explicit, accounting, economic };
+  }
+
+  const LOSS_STORAGE_KEY = 'pack_profit_loss_stats_v1';
+  function loadLossStats() {
+    try {
+      const s = JSON.parse(localStorage.getItem(LOSS_STORAGE_KEY) || '{}');
+      return { total: s.total | 0, losses: s.losses | 0 };
+    } catch (e) {
+      return { total: 0, losses: 0 };
+    }
+  }
+  function saveLossStats(stats) { localStorage.setItem(LOSS_STORAGE_KEY, JSON.stringify(stats)); }
+  function updateLossStatsUI() {
+    const s = loadLossStats();
+    const pct = s.total > 0 ? Math.round((s.losses / s.total) * 100) : 0;
+    if (lossStatsEl) lossStatsEl.textContent = 'All-time loss rate: ' + pct + '% (' + s.losses + ' of ' + s.total + ' runs)';
+  }
+  function recordRunOutcome(isLoss) {
+    if (runRecorded) return;
+    const s = loadLossStats();
+    s.total += 1;
+    if (isLoss) s.losses += 1;
+    saveLossStats(s);
+    updateLossStatsUI();
+    runRecorded = true;
+  }
+
     // Reveal correct answers (for students who need help)
     document.getElementById('reveal-btn').addEventListener('click', () => {
       const info = SETS[selectedSetId];
@@ -364,6 +419,72 @@
         '<div>Total (economic) profit: ' + fmt(economic) + '</div>';
       answersBox.classList.remove('hidden');
     });
+
+    // Firebase + Global stats (optional)
+    function setupFirebase() {
+      try {
+        if (window.__FIREBASE_CONFIG__ && (!window.firebase.apps || window.firebase.apps.length === 0)) {
+          window.firebase.initializeApp(window.__FIREBASE_CONFIG__);
+        }
+        if (window.firebase && window.firebase.apps && window.firebase.apps.length > 0) {
+          firebaseDb = window.firebase.firestore();
+        }
+      } catch (e) {
+        console.warn('Firebase init failed', e);
+      }
+    }
+
+    function listenToGlobalStats() {
+      if (!firebaseDb || !lossStatsEl) return;
+      const docRef = firebaseDb.collection('packProfitStats').doc('global');
+      docRef.onSnapshot(
+        (snap) => {
+          const d = snap.exists ? (snap.data() || { total: 0, losses: 0 }) : { total: 0, losses: 0 };
+          const pct = d.total > 0 ? Math.round((d.losses / d.total) * 100) : 0;
+          lossStatsEl.textContent = 'Global loss rate: ' + pct + '% (' + d.losses + ' of ' + d.total + ' runs)';
+          if (yourRunsEl) yourRunsEl.textContent = 'Global completed runs: ' + d.total;
+        },
+        (e) => console.warn('Global stats listen failed', e)
+      );
+    }
+
+    function getClientId() {
+      if (clientId) return clientId;
+      try {
+        const key = 'pack_profit_client_id_v1';
+        let id = localStorage.getItem(key);
+        if (!id) {
+          id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+          localStorage.setItem(key, id);
+        }
+        clientId = id;
+      } catch (e) { clientId = 'anon'; }
+      return clientId;
+    }
+
+    // Local per-user run tracking removed from UI; using global completed runs instead.
+
+    function computeCorrect() {
+      const info = SETS[selectedSetId];
+      if (!info) return null;
+      const implicit = round2(currentJob.wage * HOURS_SPENT);
+      const explicit = round2(PACKS_TO_OPEN * (info.packPrice ?? DEFAULT_PACK_PRICE));
+      const accounting = round2(revenueTotal - explicit);
+      const economic = round2(accounting - implicit);
+      return { implicit, explicit, accounting, economic };
+    }
+
+    function recordRunOutcome(isLoss) {
+      if (runRecorded) return;
+      if (firebaseDb) {
+        const inc = window.firebase.firestore.FieldValue.increment;
+        const statsRef = firebaseDb.collection('packProfitStats').doc('global');
+        const clientRef = firebaseDb.collection('packClients').doc(getClientId());
+        statsRef.set({ total: inc(1), losses: inc(isLoss ? 1 : 0) }, { merge: true }).catch(() => {});
+        clientRef.set({ runs: inc(1), losses: inc(isLoss ? 1 : 0), updatedAt: window.firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch(() => {});
+      }
+      runRecorded = true;
+    }
 
     function updateStats() {
       packsOpenedBadge.textContent = 'Packs opened: ' + openedPacks.length + ' / ' + PACKS_TO_OPEN;
@@ -479,6 +600,8 @@
       document.getElementById('packs-opened-badge').textContent = 'Packs opened: 0 / ' + PACKS_TO_OPEN;
       document.getElementById('cards-count-badge').textContent = 'Cards: 0';
       document.getElementById('revenue-total').textContent = fmt(0);
+      setupFirebase();
+      listenToGlobalStats();
     })();
   </script>
 </body>
