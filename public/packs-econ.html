@@ -24,7 +24,7 @@
     <h1>Pack Profit Game</h1>
     <p class="lead">Practice real-world economic thinking with chance and tradeoffs. Open 10 Pokémon packs, total the card values (revenue), and then calculate implicit cost (forgone wage), explicit cost (pack spending), accounting profit, and total (economic) profit. This mirrors decisions people make when chasing collectibles or investing: comparing expected value to price and remembering opportunity cost. You’ll reinforce AP Econ vocabulary and the actual calculations while experiencing risk and reward firsthand. We also track a global loss rate across all players and how many full runs are globally completed.</p>
     <div id="loss-stats" class="alert info">Global loss rate: —</div>
-    <div id="your-runs" class="badge">Global completed runs: 0</div>
+    <div id="your-loss" class="badge">Your loss rate: 0% (0 of 0)</div>
 
     <div class="card">
       <h2>1) Your random job</h2>
@@ -186,7 +186,7 @@
     const resultSummary = document.getElementById("result-summary");
     const answersBox = document.getElementById("answers-box");
     const lossStatsEl = document.getElementById("loss-stats");
-    const yourRunsEl = document.getElementById("your-runs");
+    const yourLossEl = document.getElementById("your-loss");
 
     function pickRandomJob() {
       const i = Math.floor(Math.random() * JOBS.length);
@@ -201,6 +201,20 @@
     }
 
     function fmt(n) { return '$' + n.toFixed(2); }
+
+    // Cookie helpers for per-user stats
+    function setCookie(name, value, opts = {}) {
+      const days = opts.days ?? 3650; // ~10 years
+      const path = opts.path ?? '/';
+      const sameSite = opts.sameSite ?? 'Lax';
+      const secure = (opts.secure ?? (location.protocol === 'https:')) ? '; Secure' : '';
+      const maxAge = days ? ('; max-age=' + (days * 24 * 60 * 60)) : '';
+      document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value) + maxAge + '; path=' + path + '; SameSite=' + sameSite + secure;
+    }
+    function getCookie(name) {
+      const m = document.cookie.match(new RegExp('(?:^|; )' + encodeURIComponent(name) + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
 
     function toggleTip(id) {
       const el = document.getElementById(id);
@@ -259,6 +273,7 @@
       answersBox.classList.add('hidden');
       answersBox.textContent = '';
       pickRandomJob();
+      refreshPersonalLossUI();
     });
 
     openBtn.addEventListener('click', async () => {
@@ -394,15 +409,7 @@
     const pct = s.total > 0 ? Math.round((s.losses / s.total) * 100) : 0;
     if (lossStatsEl) lossStatsEl.textContent = 'All-time loss rate: ' + pct + '% (' + s.losses + ' of ' + s.total + ' runs)';
   }
-  function recordRunOutcome(isLoss) {
-    if (runRecorded) return;
-    const s = loadLossStats();
-    s.total += 1;
-    if (isLoss) s.losses += 1;
-    saveLossStats(s);
-    updateLossStatsUI();
-    runRecorded = true;
-  }
+  // (RecordRunOutcome is implemented later with Firestore + cookie update)
 
     // Reveal correct answers (for students who need help)
     document.getElementById('reveal-btn').addEventListener('click', () => {
@@ -442,7 +449,6 @@
           const d = snap.exists ? (snap.data() || { total: 0, losses: 0 }) : { total: 0, losses: 0 };
           const pct = d.total > 0 ? Math.round((d.losses / d.total) * 100) : 0;
           lossStatsEl.textContent = 'Global loss rate: ' + pct + '% (' + d.losses + ' of ' + d.total + ' runs)';
-          if (yourRunsEl) yourRunsEl.textContent = 'Global completed runs: ' + d.total;
         },
         (e) => console.warn('Global stats listen failed', e)
       );
@@ -483,6 +489,15 @@
         statsRef.set({ total: inc(1), losses: inc(isLoss ? 1 : 0) }, { merge: true }).catch(() => {});
         clientRef.set({ runs: inc(1), losses: inc(isLoss ? 1 : 0), updatedAt: window.firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch(() => {});
       }
+      // Update and reflect personal cookie stats immediately
+      try {
+        const raw = getCookie('pack_user_stats_v1');
+        const s = raw ? JSON.parse(raw) : { total: 0, losses: 0 };
+        s.total += 1;
+        if (isLoss) s.losses += 1;
+        setCookie('pack_user_stats_v1', JSON.stringify(s));
+      } catch {}
+      refreshPersonalLossUI();
       runRecorded = true;
     }
 
@@ -596,12 +611,22 @@
     pickRandomJob();
     initSetSelect();
     // Stats initial
+    function refreshPersonalLossUI() {
+      try {
+        const raw = getCookie('pack_user_stats_v1');
+        const s = raw ? JSON.parse(raw) : { total: 0, losses: 0 };
+        const pct = s.total > 0 ? Math.round((s.losses / s.total) * 100) : 0;
+        if (yourLossEl) yourLossEl.textContent = 'Your loss rate: ' + pct + '% (' + s.losses + ' of ' + s.total + ')';
+      } catch {}
+    }
+
     (function(){
       document.getElementById('packs-opened-badge').textContent = 'Packs opened: 0 / ' + PACKS_TO_OPEN;
       document.getElementById('cards-count-badge').textContent = 'Cards: 0';
       document.getElementById('revenue-total').textContent = fmt(0);
       setupFirebase();
       listenToGlobalStats();
+      refreshPersonalLossUI();
     })();
   </script>
 </body>
