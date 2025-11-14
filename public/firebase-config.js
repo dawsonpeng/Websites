@@ -1,7 +1,10 @@
 window.__FIREBASE_CONFIG__ = {
-    apiKey: "AIzaSyBzptt459G8eT0VMJs4TVcVcjoy1QHHxSA",
-    authDomain: "pokemon-f1ef9.firebaseapp.com",
-    projectId: "pokemon-f1ef9",
-    appId: "1:1059820719675:web:e49bbd5e5b119bc8c9961e"
-    // measurementId/storageBucket optional
-  };
+  apiKey: "AIzaSyBgZDkRzjTVLzThcvlHBP7GUJFBpd1AeAU",
+  authDomain: "personalwebsite-dawson.firebaseapp.com",
+  databaseURL: "https://personalwebsite-dawson-default-rtdb.firebaseio.com",
+  projectId: "personalwebsite-dawson",
+  storageBucket: "personalwebsite-dawson.firebasestorage.app",
+  messagingSenderId: "1038263669522",
+  appId: "1:1038263669522:web:6b5981f99642edac66d9cb",
+  measurementId: "G-K5Q88YSB40"
+};

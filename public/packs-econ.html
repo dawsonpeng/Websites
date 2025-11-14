@@ -650,9 +650,11 @@
       try {
         if (window.__FIREBASE_CONFIG__ && (!window.firebase.apps || window.firebase.apps.length === 0)) {
           window.firebase.initializeApp(window.__FIREBASE_CONFIG__);
+          console.log('Firebase initialized with project:', window.__FIREBASE_CONFIG__.projectId);
         }
         if (window.firebase && window.firebase.apps && window.firebase.apps.length > 0) {
           firebaseDb = window.firebase.firestore();
+          console.log('Firestore database connected to project:', window.__FIREBASE_CONFIG__.projectId);
         }
       } catch (e) {
         console.warn('Firebase init failed', e);
@@ -766,12 +768,18 @@
         const inc = window.firebase.firestore.FieldValue.increment;
         const statsRef = firebaseDb.collection('packProfitStats').doc('global');
         const clientRef = firebaseDb.collection('packClients').doc(getClientId());
-        statsRef.set({ total: inc(1), wins: inc(isLoss ? 0 : 1), losses: inc(isLoss ? 1 : 0) }, { merge: true }).catch(() => {});
-        clientRef.set({ runs: inc(1), losses: inc(isLoss ? 1 : 0), updatedAt: window.firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch(() => {});
+        statsRef.set({ total: inc(1), wins: inc(isLoss ? 0 : 1), losses: inc(isLoss ? 1 : 0) }, { merge: true }).catch((e) => {
+          console.error('Error writing to packProfitStats:', e);
+        });
+        clientRef.set({ runs: inc(1), losses: inc(isLoss ? 1 : 0), updatedAt: window.firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch((e) => {
+          console.error('Error writing to packClients:', e);
+        });
         // Per-set stats
         if (selectedSetId) {
           const setRef = firebaseDb.collection('packSetStats').doc(selectedSetId);
-          setRef.set({ total: inc(1), wins: inc(isLoss ? 0 : 1) }, { merge: true }).catch(() => {});
+          setRef.set({ total: inc(1), wins: inc(isLoss ? 0 : 1) }, { merge: true }).catch((e) => {
+            console.error('Error writing to packSetStats:', e);
+          });
         }
       }
       // Update and reflect personal cookie stats immediately
