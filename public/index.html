@@ -25,7 +25,7 @@
     html, body {
       height: 100%;
       overflow: hidden;
-      font-family: 'Audiowide', 'Orbitron', sans-serif;
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     body {
@@ -72,27 +72,30 @@
     }
 
     .main-title {
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 2.5rem;
-      font-weight: 400;
+      font-weight: 500;
       color: rgba(255, 255, 255, 0.95);
       text-shadow: 
         0 0 20px rgba(74, 144, 226, 0.6),
         0 2px 10px rgba(0, 0, 0, 0.4),
         0 4px 20px rgba(0, 0, 0, 0.3),
         0 6px 30px rgba(0, 0, 0, 0.2);
-      letter-spacing: 2px;
+      letter-spacing: -0.5px;
       margin-bottom: 8px;
       animation: title-float 3s ease-in-out infinite;
       filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
     }
 
     .subtitle {
-      font-size: 1rem;
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.95rem;
       color: rgba(255, 255, 255, 0.7);
       text-shadow: 
         0 2px 8px rgba(0, 0, 0, 0.4),
         0 4px 12px rgba(0, 0, 0, 0.2);
       font-weight: 400;
+      letter-spacing: -0.2px;
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     }
 
@@ -309,6 +312,79 @@
       background: #5a5a5a;
       border-radius: 50% 50% 30% 30%;
       box-shadow: inset -5px -5px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Score Rock - Bottom Right */
+    .score-rock {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      z-index: 101;
+      width: 180px;
+      height: 120px;
+      background: linear-gradient(135deg, 
+        rgba(80, 70, 60, 0.95) 0%,
+        rgba(60, 50, 40, 0.95) 50%,
+        rgba(70, 60, 50, 0.95) 100%);
+      border-radius: 15px 45px 15px 45px;
+      border: 3px solid rgba(100, 90, 80, 0.8);
+      box-shadow: 
+        inset 0 3px 6px rgba(0, 0, 0, 0.6),
+        inset 0 -3px 6px rgba(255, 255, 255, 0.1),
+        0 6px 16px rgba(0, 0, 0, 0.7),
+        0 3px 8px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      pointer-events: none;
+    }
+    
+    .score-rock::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px);
+      border-radius: 15px 45px 15px 45px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    
+    .score-label {
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(200, 190, 180, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.2),
+        0 -1px 0 rgba(0, 0, 0, 0.8),
+        1px 0 0 rgba(0, 0, 0, 0.6),
+        -1px 0 0 rgba(0, 0, 0, 0.6);
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .score-value {
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: rgba(255, 200, 100, 0.95);
+      text-shadow: 
+        0 2px 0 rgba(0, 0, 0, 0.8),
+        0 0 8px rgba(255, 200, 100, 0.5),
+        0 0 16px rgba(255, 200, 100, 0.3);
+      position: relative;
+      z-index: 1;
+      line-height: 1;
     }
 
     .clam {
@@ -534,35 +610,30 @@
     /* Blood Pool Effect */
     .blood-pool {
       position: fixed;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(200, 0, 0, 0.8) 0%, rgba(150, 0, 0, 0.6) 40%, rgba(100, 0, 0, 0.3) 70%, transparent 100%);
+      /* border-radius will be set dynamically via JavaScript for random blob shapes */
+      background: radial-gradient(ellipse 85% 75% at 45% 40%, rgba(200, 0, 0, 0.8) 0%, rgba(150, 0, 0, 0.6) 35%, rgba(100, 0, 0, 0.4) 60%, rgba(80, 0, 0, 0.2) 85%, transparent 100%);
       pointer-events: none;
       z-index: 45;
-      animation: blood-spread 1.5s ease-out forwards;
       transform-origin: center;
+      filter: blur(2px);
     }
-
-    @keyframes blood-spread {
-      0% {
-        width: 0;
-        height: 0;
-        opacity: 0;
-      }
-      30% {
-        opacity: 1;
-      }
-      100% {
-        width: 120px;
-        height: 120px;
-        opacity: 0.7;
-      }
+    
+    /* Blood pool persistent state - stays visible longer */
+    .blood-pool.persistent {
+      animation: none;
+      opacity: 0.5;
+    }
+    
+    .blood-pool.small.persistent {
+      opacity: 0.4;
     }
 
     /* Nom Nom Nom Text */
     .nom-text {
       position: fixed;
-      font-family: 'Audiowide', 'Orbitron', sans-serif;
-      font-size: 32px;
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 24px;
+      font-weight: 500;
       color: rgba(255, 255, 255, 0.95);
       pointer-events: none;
       z-index: 52;
@@ -572,6 +643,12 @@
         0 4px 16px rgba(0, 0, 0, 0.6);
       animation: nom-bounce 1.5s ease-out forwards;
       white-space: nowrap;
+      letter-spacing: -0.3px;
+    }
+    
+    .nom-text.small {
+      font-size: 14px;
+      animation: nom-bounce-small 1.2s ease-out forwards;
     }
 
     @keyframes nom-bounce {
@@ -584,19 +661,42 @@
         opacity: 1;
       }
       40% {
-        transform: translateY(-40px) scale(1);
-        opacity: 1;
+        transform: translateY(-50px) scale(1);
       }
       60% {
-        transform: translateY(-35px) scale(1.05);
-        opacity: 1;
+        transform: translateY(-45px) scale(0.95);
       }
       80% {
-        transform: translateY(-20px) scale(0.95);
+        transform: translateY(-60px) scale(0.9);
         opacity: 0.8;
       }
       100% {
-        transform: translateY(0) scale(0.8);
+        transform: translateY(-80px) scale(0.7);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes nom-bounce-small {
+      0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+      }
+      20% {
+        transform: translateY(-20px) scale(1.1);
+        opacity: 1;
+      }
+      40% {
+        transform: translateY(-35px) scale(1);
+      }
+      60% {
+        transform: translateY(-30px) scale(0.95);
+      }
+      80% {
+        transform: translateY(-40px) scale(0.9);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-50px) scale(0.7);
         opacity: 0;
       }
     }
@@ -607,9 +707,44 @@
       z-index: 20;
       cursor: pointer;
       transition: transform 0.3s ease, opacity 0.3s ease;
-      animation: swim-across 15s linear infinite, fade-in-on-start 0.5s ease-in forwards;
       filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
       opacity: 0;
+    }
+    
+    .sea-animal.swimming {
+      animation: fade-in-on-start 0.5s ease-in forwards;
+    }
+    
+    /* Decorative small fish */
+    .decorative-fish {
+      position: fixed;
+      z-index: 15;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
+      opacity: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .decorative-fish.swimming {
+      animation: fade-in-on-start 0.3s ease-in forwards;
+    }
+    
+    .decorative-fish .fish {
+      width: 100px;
+      height: 60px;
+      animation: fish-bob 1.5s ease-in-out infinite;
+    }
+    
+    .decorative-fish.hidden {
+      opacity: 0 !important;
+      pointer-events: none;
+      animation: none !important;
+      transform: scale(0) !important;
     }
 
     @keyframes fade-in-on-start {
@@ -640,11 +775,37 @@
         transform: translateY(0);
       }
     }
+    
+    @keyframes swim-across-small {
+      0% {
+        left: -100px;
+        transform: translateY(0);
+      }
+      25% {
+        transform: translateY(-5px);
+      }
+      50% {
+        transform: translateY(0);
+      }
+      75% {
+        transform: translateY(5px);
+      }
+      100% {
+        left: calc(100% + 100px);
+        transform: translateY(0);
+      }
+    }
 
     .sea-animal.nearby {
-      transform: scale(1.15) translateY(0) !important;
+      transform: scale(1.15) !important;
       opacity: 1;
       filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+    }
+    
+    .decorative-fish.nearby {
+      transform: scale(1.2) !important;
+      opacity: 1;
+      filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5));
     }
 
     .sea-animal.hidden {
@@ -791,7 +952,8 @@
       left: 50%;
       transform: translateX(-50%);
       white-space: nowrap;
-      font-size: 13px;
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 12px;
       font-weight: 400;
       color: var(--text);
       opacity: 1;
@@ -802,6 +964,7 @@
         0 0 12px rgba(0, 0, 0, 0.7),
         0 4px 16px rgba(0, 0, 0, 0.5);
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+      letter-spacing: -0.1px;
     }
 
     .sea-animal.nearby .fish-label {
@@ -957,36 +1120,57 @@
       }
     }
 
-    /* Content Area */
-    .content-area {
-      position: relative;
-      z-index: 10;
-      min-height: 100vh;
-      padding-top: 100px;
-    }
 
-    /* Instructions */
+    /* Instructions - Etched on Rock */
     .instructions {
       position: fixed;
-      top: 130px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(10px);
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 11px;
-      color: var(--text);
+      background: linear-gradient(135deg, 
+        rgba(80, 70, 60, 0.95) 0%,
+        rgba(60, 50, 40, 0.95) 50%,
+        rgba(70, 60, 50, 0.95) 100%);
+      backdrop-filter: blur(5px);
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(200, 190, 180, 0.9);
       text-align: center;
-      opacity: 0.8;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      opacity: 0.9;
+      border: 3px solid rgba(100, 90, 80, 0.8);
       white-space: nowrap;
       box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.4),
-        0 2px 6px rgba(0, 0, 0, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.1);
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        inset 0 2px 4px rgba(0, 0, 0, 0.5),
+        inset 0 -2px 4px rgba(255, 255, 255, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.6),
+        0 2px 6px rgba(0, 0, 0, 0.4);
+      text-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.2),
+        0 -1px 0 rgba(0, 0, 0, 0.8),
+        1px 0 0 rgba(0, 0, 0, 0.6),
+        -1px 0 0 rgba(0, 0, 0, 0.6);
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    
+    .instructions::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px);
+      border-radius: 12px;
+      opacity: 0.3;
+      pointer-events: none;
     }
 
     /* Intro Animation Overlay */
@@ -1028,7 +1212,7 @@
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Dawson Peng's Personal Website">
 </head>
@@ -1116,12 +1300,15 @@
   <!-- Sea Animals Container -->
   <div id="sea-animals-container"></div>
 
-  <!-- Content Area (for scroll depth) -->
-  <div class="content-area"></div>
-
   <!-- Instructions -->
   <div class="instructions" id="instructions">
     Use WASD or Arrow Keys to move • Press Space to go to a webpage
+  </div>
+
+  <!-- Score Rock -->
+  <div class="score-rock" id="score-rock">
+    <div class="score-label">Fish Eaten</div>
+    <div class="score-value" id="score-value">0</div>
   </div>
 
   <!-- Intro Overlay -->
@@ -1175,7 +1362,6 @@
         vy: 0,
         speed: 10,
         facing: 'right',
-        isBiting: false,
         isMoving: false
       },
       keys: {
@@ -1185,9 +1371,9 @@
         right: false
       },
       introComplete: false,
-      scrollDepth: 0,
       nearbyAnimal: null,
-      filteredPages: pages
+      filteredPages: pages,
+      score: 0
     };
 
     // ============================================================================
@@ -1195,7 +1381,6 @@
     // ============================================================================
     const sharkEl = document.getElementById('shark');
     const oceanBg = document.getElementById('ocean-bg');
-    const oceanFloor = document.getElementById('ocean-floor');
     const seaAnimalsContainer = document.getElementById('sea-animals-container');
     const searchInput = document.getElementById('search');
     const instructions = document.getElementById('instructions');
@@ -1206,6 +1391,7 @@
     const sandPlumes = document.getElementById('sand-plumes');
     const waveTrailContainer = document.getElementById('wave-trail-container');
     const sharkTrailContainer = document.getElementById('shark-trail-container');
+    const scoreValueEl = document.getElementById('score-value');
 
     // GIF elements (if they exist)
     const sharkGifLeft = document.getElementById('shark-gif-left');
@@ -1261,68 +1447,6 @@
         clam.style.left = Math.random() * 100 + '%';
         backgroundDetails.appendChild(clam);
       }
-    }
-
-    // ============================================================================
-    // OCEAN BACKGROUND & DEPTH SYSTEM
-    // ============================================================================
-    function rgbToHex(r, g, b) {
-      return '#' + [r, g, b].map(x => {
-        const hex = Math.round(x).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-      }).join('');
-    }
-
-    function lerpColor(color1, color2, t) {
-      const c1 = hexToRgb(color1);
-      const c2 = hexToRgb(color2);
-      const r = c1.r + (c2.r - c1.r) * t;
-      const g = c1.g + (c2.g - c1.g) * t;
-      const b = c1.b + (c2.b - c1.b) * t;
-      return rgbToHex(r, g, b);
-    }
-
-    function hexToRgb(hex) {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null;
-    }
-
-    function updateOceanDepth() {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
-      state.scrollDepth = scrollPercent;
-
-      const depth = state.scrollDepth;
-      let topColor, midColor, bottomColor;
-
-      if (depth < 0.33) {
-        const t = depth / 0.33;
-        topColor = lerpColor('#4a90e2', '#2e5c8a', t);
-        midColor = lerpColor('#2e5c8a', '#1a3a5c', t);
-        bottomColor = '#0a1f2e';
-      } else if (depth < 0.66) {
-        const t = (depth - 0.33) / 0.33;
-        topColor = lerpColor('#2e5c8a', '#1a3a5c', t);
-        midColor = lerpColor('#1a3a5c', '#0a1f2e', t);
-        bottomColor = '#1a1a1a';
-      } else {
-        const t = (depth - 0.66) / 0.34;
-        topColor = lerpColor('#1a3a5c', '#0a1f2e', t);
-        midColor = lerpColor('#0a1f2e', '#1a1a1a', t);
-        bottomColor = '#1a1a1a';
-      }
-
-      oceanBg.style.background = `linear-gradient(to bottom,
-        ${topColor} 0%,
-        ${midColor} 50%,
-        ${bottomColor} 100%),
-        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.1) 0%, transparent 50%)`;
     }
 
     // ============================================================================
@@ -1484,7 +1608,8 @@
       let nearestAnimal = null;
       let nearestDistance = Infinity;
 
-      const animals = document.querySelectorAll('.sea-animal:not(.hidden)');
+      // Include both regular sea animals and decorative fish
+      const animals = document.querySelectorAll('.sea-animal:not(.hidden), .decorative-fish:not(.hidden)');
       const sharkX = state.shark.x;
       const sharkY = state.shark.y;
 
@@ -1508,25 +1633,51 @@
         }
       });
 
+      // Update nearby class for all animals
       animals.forEach(animal => {
-        animal.classList.toggle('nearby', animal === nearestAnimal);
+        const wasNearby = animal.classList.contains('nearby');
+        const isNearby = animal === nearestAnimal;
+        
+        animal.classList.toggle('nearby', isNearby);
+        
+        // When fish becomes nearby, preserve its current transform for bobbing
+        // and combine with scale effect
+        if (isNearby && !wasNearby) {
+          const currentTransform = animal.style.transform || '';
+          // Extract translateY value if it exists, or use 0
+          const translateYMatch = currentTransform.match(/translateY\(([^)]+)\)/);
+          const translateY = translateYMatch ? translateYMatch[1] : '0px';
+          // Apply scale while preserving translateY for smooth bobbing
+          animal.style.transform = `translateY(${translateY}) scale(1.15)`;
+        } else if (!isNearby && wasNearby) {
+          // When no longer nearby, remove scale but keep translateY
+          const currentTransform = animal.style.transform || '';
+          const translateYMatch = currentTransform.match(/translateY\(([^)]+)\)/);
+          animal.style.transform = translateYMatch ? `translateY(${translateYMatch[1]})` : '';
+        }
       });
 
       state.nearbyAnimal = nearestAnimal;
     }
 
+    function updateScore() {
+      if (scoreValueEl) {
+        scoreValueEl.textContent = state.score;
+      }
+    }
+
     function handleBite() {
       if (!state.nearbyAnimal) return;
-      if (state.shark.isBiting) return; // Prevent multiple bites
 
-      // Store the href before starting animation
+      // Check if it's a decorative fish (no href)
       const href = state.nearbyAnimal.dataset.href;
-      if (!href) {
-        console.warn('No href found for nearby animal');
-        return;
-      }
+      const isDecorative = state.nearbyAnimal.classList.contains('decorative-fish');
+      
+      // Store swim duration for respawning decorative fish
+      const swimDuration = state.nearbyAnimal.dataset.swimDuration 
+        ? parseInt(state.nearbyAnimal.dataset.swimDuration) 
+        : 10000 + Math.random() * 10000;
 
-      state.shark.isBiting = true;
       sharkEl.classList.add('biting');
 
       // Get fish position for blood pool and text
@@ -1534,27 +1685,57 @@
       const fishX = fishRect.left + fishRect.width / 2;
       const fishY = fishRect.top + fishRect.height / 2;
 
-      // Create blood pool at fish location
+      // Create blood pool at fish location - random blobby shape (wider than tall)
       const bloodPool = document.createElement('div');
-      bloodPool.className = 'blood-pool';
-      bloodPool.style.left = (fishX - 60) + 'px';
-      bloodPool.style.top = (fishY - 60) + 'px';
+      bloodPool.className = isDecorative ? 'blood-pool small' : 'blood-pool';
+      
+      // Generate random blob shapes for animation
+      const startShape = getRandomBlobShape();
+      const midShape = getRandomBlobShapeMid();
+      const endShape = getRandomBlobShapeEnd();
+      
+      // Set initial border-radius
+      bloodPool.style.borderRadius = startShape;
+      
+      // Center positioning for blobby shapes (width/2 and height/2)
+      const finalWidth = isDecorative ? 70 : 140;
+      const finalHeight = isDecorative ? 55 : 110;
+      const bloodPoolOffsetX = finalWidth / 2;
+      const bloodPoolOffsetY = finalHeight / 2;
+      bloodPool.style.left = (fishX - bloodPoolOffsetX) + 'px';
+      bloodPool.style.top = (fishY - bloodPoolOffsetY) + 'px';
+      
+      // Store shapes for animation
+      bloodPool.dataset.startShape = startShape;
+      bloodPool.dataset.midShape = midShape;
+      bloodPool.dataset.endShape = endShape;
+      bloodPool.dataset.isDecorative = isDecorative;
+      bloodPool.dataset.finalWidth = finalWidth;
+      bloodPool.dataset.finalHeight = finalHeight;
+      
       document.body.appendChild(bloodPool);
 
-      // Create "nom nom nom" text above the shark
+      // Animate the blood pool with random blob shapes
+      animateBloodPool(bloodPool);
+
+      // Create "nom nom nom" text above the shark - smaller for decorative fish
       const nomText = document.createElement('div');
-      nomText.className = 'nom-text';
+      nomText.className = isDecorative ? 'nom-text small' : 'nom-text';
       nomText.textContent = 'nom nom nom';
-      nomText.style.left = (state.shark.x - 80) + 'px';
-      nomText.style.top = (state.shark.y - 80) + 'px';
+      const nomOffset = isDecorative ? 40 : 80;
+      nomText.style.left = (state.shark.x - nomOffset) + 'px';
+      nomText.style.top = (state.shark.y - nomOffset) + 'px';
       document.body.appendChild(nomText);
 
+      // Store reference to the fish before hiding it (important for decorative fish respawn)
+      const eatenFish = state.nearbyAnimal;
+
       // Hide the fish with scale animation - stop animations and hide
-      state.nearbyAnimal.style.animation = 'none';
-      state.nearbyAnimal.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-      state.nearbyAnimal.style.transform = 'scale(0)';
-      state.nearbyAnimal.style.opacity = '0';
-      state.nearbyAnimal.classList.add('hidden');
+      eatenFish.style.animation = 'none';
+      eatenFish.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      eatenFish.style.transform = 'scale(0)';
+      eatenFish.style.opacity = '0';
+      eatenFish.classList.add('hidden');
 
       // Bite effect at shark location
       const biteEffect = document.createElement('div');
@@ -1563,48 +1744,248 @@
       biteEffect.style.top = state.shark.y + 'px';
       document.body.appendChild(biteEffect);
 
-      // Wait for animation to complete before navigating
+      // Increment score for decorative fish
+      if (isDecorative) {
+        state.score++;
+        updateScore();
+      }
+
+      // For decorative fish, respawn immediately after a brief delay
+      if (isDecorative) {
+        // Calculate new random Y position and duration
+        const waveBottom = 150;
+        const sandTop = window.innerHeight - 120;
+        const spawnAreaHeight = sandTop - waveBottom;
+        const newRandomY = waveBottom + Math.random() * spawnAreaHeight;
+        const newSwimDuration = 10000 + Math.random() * 10000;
+        eatenFish.dataset.swimDuration = newSwimDuration.toString();
+        
+        // Give it a new realistic color
+        const fishImg = eatenFish.querySelector('.fish-gif');
+        if (fishImg) {
+          const fishColor = getRealisticFishColor();
+          fishImg.style.filter = `hue-rotate(${fishColor.hue}deg) saturate(${fishColor.saturation}%) brightness(${fishColor.brightness}%)`;
+        }
+        
+        // Respawn immediately after a brief delay
       setTimeout(() => {
-        state.shark.isBiting = false;
+          // Verify fish is still in DOM
+          if (!eatenFish || !eatenFish.parentNode) {
+            return;
+          }
+          
+          // Cancel any running animations
+          if (eatenFish._animationId) {
+            cancelAnimationFrame(eatenFish._animationId);
+            eatenFish._animationId = null;
+          }
+          if (eatenFish._animationTimeout) {
+            clearTimeout(eatenFish._animationTimeout);
+            eatenFish._animationTimeout = null;
+          }
+          
+          // Remove only problematic classes, keep decorative-fish class
+          eatenFish.classList.remove('hidden', 'nearby', 'swimming');
+          
+          // Clear only specific inline styles that might conflict
+          eatenFish.style.removeProperty('animation');
+          eatenFish.style.removeProperty('transition');
+          
+          // Set position at edge immediately
+          eatenFish.style.left = '-100px';
+          eatenFish.style.top = newRandomY + 'px';
+          eatenFish.style.position = 'fixed';
+          eatenFish.style.zIndex = '15';
+          
+          // CRITICAL: Force visibility - use setProperty with !important to override CSS
+          eatenFish.style.setProperty('opacity', '1', 'important');
+          eatenFish.style.setProperty('transform', 'translateY(0)', 'important');
+          
+          // Start animation immediately - animateFish will handle position and animation
+          animateFish(eatenFish, newSwimDuration, true, newRandomY);
+        }, 300);
+      }
+
+      // Wait for animation to complete
+      setTimeout(() => {
         sharkEl.classList.remove('biting');
         biteEffect.remove();
-        bloodPool.remove();
         nomText.remove();
 
-        // Navigate to the stored href
-        console.log('Navigating to:', href);
+        // Make blood pool persistent - keep it visible for a short time
+        // The blob shape is already animated and set, just keep it visible
+        bloodPool.classList.add('persistent');
+        // Dimensions are already set by animateBloodPool, just ensure they're maintained
+        // The randomized blob shape (border-radius) is already in place
+        
+        // Remove blood pool after 2.5 seconds (total ~4.5 seconds with animation)
+        setTimeout(() => {
+          if (bloodPool.parentNode) {
+            bloodPool.remove();
+          }
+        }, 2500);
+
+        if (!isDecorative && href) {
+          // Navigate to the stored href (only for regular fish with links)
         try {
           window.location.href = href;
         } catch (e) {
-          console.error('Navigation error:', e);
-          // Fallback navigation method
           window.location.assign(href);
         }
-      }, 1500); // Wait 1.5 seconds for the full animation
+        }
+      }, 2000); // Wait 2 seconds for the spread animation
+    }
+
+    // ============================================================================
+    // RANDOM BLOB SHAPE GENERATOR
+    // ============================================================================
+    function getRandomBlobShape() {
+      // Generate random border-radius values for very irregular blob shape
+      // Each corner gets random values for horizontal and vertical radii
+      // Values range from 15% to 85% for extremely uneven edges (not perfectly round)
+      const topLeft = 15 + Math.random() * 70;
+      const topRight = 15 + Math.random() * 70;
+      const bottomRight = 15 + Math.random() * 70;
+      const bottomLeft = 15 + Math.random() * 70;
+      
+      // Vertical radii (after the slash) - also very random for uneven edges
+      const topLeftY = 15 + Math.random() * 70;
+      const topRightY = 15 + Math.random() * 70;
+      const bottomRightY = 15 + Math.random() * 70;
+      const bottomLeftY = 15 + Math.random() * 70;
+      
+      // Return as CSS border-radius string
+      return `${topLeft.toFixed(1)}% ${topRight.toFixed(1)}% ${bottomRight.toFixed(1)}% ${bottomLeft.toFixed(1)}% / ${topLeftY.toFixed(1)}% ${topRightY.toFixed(1)}% ${bottomRightY.toFixed(1)}% ${bottomLeftY.toFixed(1)}%`;
+    }
+    
+    function getRandomBlobShapeMid() {
+      // Generate a mid-animation shape that's different from start
+      // More extreme values for very uneven edges
+      const topLeft = 20 + Math.random() * 65;
+      const topRight = 20 + Math.random() * 65;
+      const bottomRight = 20 + Math.random() * 65;
+      const bottomLeft = 20 + Math.random() * 65;
+      
+      const topLeftY = 20 + Math.random() * 65;
+      const topRightY = 20 + Math.random() * 65;
+      const bottomRightY = 20 + Math.random() * 65;
+      const bottomLeftY = 20 + Math.random() * 65;
+      
+      return `${topLeft.toFixed(1)}% ${topRight.toFixed(1)}% ${bottomRight.toFixed(1)}% ${bottomLeft.toFixed(1)}% / ${topLeftY.toFixed(1)}% ${topRightY.toFixed(1)}% ${bottomRightY.toFixed(1)}% ${bottomLeftY.toFixed(1)}%`;
+    }
+    
+    function getRandomBlobShapeEnd() {
+      // Generate a final shape that's different from start and mid
+      // Keep it very uneven - not perfectly round
+      const topLeft = 25 + Math.random() * 60;
+      const topRight = 25 + Math.random() * 60;
+      const bottomRight = 25 + Math.random() * 60;
+      const bottomLeft = 25 + Math.random() * 60;
+      
+      const topLeftY = 25 + Math.random() * 60;
+      const topRightY = 25 + Math.random() * 60;
+      const bottomRightY = 25 + Math.random() * 60;
+      const bottomLeftY = 25 + Math.random() * 60;
+      
+      return `${topLeft.toFixed(1)}% ${topRight.toFixed(1)}% ${bottomRight.toFixed(1)}% ${bottomLeft.toFixed(1)}% / ${topLeftY.toFixed(1)}% ${topRightY.toFixed(1)}% ${bottomRightY.toFixed(1)}% ${bottomLeftY.toFixed(1)}%`;
+    }
+    
+    function animateBloodPool(bloodPool) {
+      const startShape = bloodPool.dataset.startShape;
+      const midShape = bloodPool.dataset.midShape;
+      const endShape = bloodPool.dataset.endShape;
+      const isDecorative = bloodPool.dataset.isDecorative === 'true';
+      const finalWidth = parseFloat(bloodPool.dataset.finalWidth);
+      const finalHeight = parseFloat(bloodPool.dataset.finalHeight);
+      const duration = isDecorative ? 1800 : 2000;
+      
+      const startTime = Date.now();
+      bloodPool.style.width = '0';
+      bloodPool.style.height = '0';
+      bloodPool.style.opacity = '0';
+      bloodPool.style.borderRadius = startShape;
+      
+      function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        if (progress >= 1) {
+          // Animation complete
+          bloodPool.style.width = finalWidth + 'px';
+          bloodPool.style.height = finalHeight + 'px';
+          bloodPool.style.opacity = '0.6';
+          bloodPool.style.borderRadius = endShape;
+          return;
+        }
+        
+        // Ease-out function for smooth animation
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        
+        // Interpolate size
+        const currentWidth = finalWidth * easeOut;
+        const currentHeight = finalHeight * easeOut;
+        bloodPool.style.width = currentWidth + 'px';
+        bloodPool.style.height = currentHeight + 'px';
+        
+        // Interpolate opacity (fade in quickly, then steady)
+        if (progress < 0.2) {
+          bloodPool.style.opacity = (progress / 0.2).toString();
+        } else {
+          bloodPool.style.opacity = '0.6';
+        }
+        
+        // Morph border-radius through shapes - creates dynamic blob animation
+        if (progress < 0.3) {
+          bloodPool.style.borderRadius = startShape;
+        } else if (progress < 0.7) {
+          // Mix start and mid
+          bloodPool.style.borderRadius = midShape;
+        } else {
+          // Mix mid and end
+          bloodPool.style.borderRadius = endShape;
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+    }
+
+    // ============================================================================
+    // REALISTIC FISH COLORS
+    // ============================================================================
+    function getRealisticFishColor() {
+      // Realistic fish color palettes:
+      // Blues (180-200deg): Blue fish, damselfish
+      // Teals (160-180deg): Parrotfish, wrasse
+      // Greens (120-140deg): Green chromis, gobies
+      // Yellows (40-60deg): Yellow tang, butterflyfish
+      // Oranges (10-30deg): Clownfish, angelfish
+      // Silvers (180-220deg, low saturation): Silver fish, sardines
+      
+      const colorTypes = [
+        { hueRange: [180, 200], satRange: [70, 100], brightRange: [85, 105], name: 'blue' },      // Blue fish
+        { hueRange: [160, 180], satRange: [60, 90], brightRange: [80, 100], name: 'teal' },       // Teal/cyan
+        { hueRange: [120, 140], satRange: [50, 80], brightRange: [75, 95], name: 'green' },       // Green
+        { hueRange: [40, 60], satRange: [70, 100], brightRange: [90, 110], name: 'yellow' },      // Yellow
+        { hueRange: [10, 30], satRange: [60, 90], brightRange: [85, 105], name: 'orange' },       // Orange
+        { hueRange: [180, 220], satRange: [10, 40], brightRange: [85, 105], name: 'silver' },     // Silver
+      ];
+      
+      // Randomly select a color type
+      const colorType = colorTypes[Math.floor(Math.random() * colorTypes.length)];
+      
+      const hue = colorType.hueRange[0] + Math.random() * (colorType.hueRange[1] - colorType.hueRange[0]);
+      const saturation = colorType.satRange[0] + Math.random() * (colorType.satRange[1] - colorType.satRange[0]);
+      const brightness = colorType.brightRange[0] + Math.random() * (colorType.brightRange[1] - colorType.brightRange[0]);
+      
+      return { hue, saturation, brightness };
     }
 
     // ============================================================================
     // SEA ANIMALS RENDERING
     // ============================================================================
-    function renderSeaAnimals() {
-      seaAnimalsContainer.innerHTML = '';
-
-      // Calculate the vertical spawn area: below waves (150px) and above sand (120px from bottom)
-      const waveBottom = 150; // Waves end at 150px from top
-      const sandTop = window.innerHeight - 120; // Sand starts 120px from bottom
-      const spawnAreaHeight = sandTop - waveBottom;
-      
-      // Minimum spacing between fish to prevent collisions
-      const minSpacing = 80; // Minimum vertical distance between fish
-      const usedYPositions = [];
-
-      state.filteredPages.forEach((page, index) => {
-        const animal = document.createElement('div');
-        animal.className = 'sea-animal';
-        animal.dataset.href = page.href;
-        animal.dataset.index = index;
-
-        // Find a unique Y position that doesn't collide with other fish
+    function getRandomYPosition(usedYPositions, waveBottom, spawnAreaHeight, minSpacing) {
         let randomY;
         let attempts = 0;
         let validPosition = false;
@@ -1624,27 +2005,144 @@
           attempts++;
         }
         
-        // If we couldn't find a valid position after 50 attempts, use the random one anyway
-        // (this handles edge cases where there are too many fish)
+      return randomY;
+    }
+
+    function animateFish(fishElement, swimDuration = 25000, skipFadeIn = false, yPosition = null) {
+      // Cancel any existing animation on this fish to prevent multiple animations
+      if (fishElement._animationId) {
+        cancelAnimationFrame(fishElement._animationId);
+        fishElement._animationId = null;
+      }
+      if (fishElement._animationTimeout) {
+        clearTimeout(fishElement._animationTimeout);
+        fishElement._animationTimeout = null;
+      }
+      
+      // Get Y position - use provided position or generate random one
+      let randomY;
+      if (yPosition !== null) {
+        randomY = yPosition;
+      } else {
+        const waveBottom = 150;
+        const sandTop = window.innerHeight - 120;
+        const spawnAreaHeight = sandTop - waveBottom;
+        randomY = waveBottom + Math.random() * spawnAreaHeight;
+      }
+      
+      // Ensure fish is visible when it appears at the edge
+      // Remove hidden class first
+      fishElement.classList.remove('hidden');
+      // Set position
+      fishElement.style.top = randomY + 'px';
+      fishElement.style.left = '-100px';
+      // Force visibility with !important to override CSS (decorative-fish has opacity: 0)
+      // For decorative fish, we MUST use !important to override the CSS opacity: 0
+      if (fishElement.classList.contains('decorative-fish')) {
+        fishElement.style.setProperty('opacity', '1', 'important');
+      } else {
+        fishElement.style.opacity = '1';
+      }
+      fishElement.style.setProperty('transform', 'translateY(0)', 'important');
+      
+      // Only add swimming class (which triggers fade-in) if not skipping fade-in
+      // After intro, we want immediate visibility
+      if (!skipFadeIn) {
+        fishElement.classList.add('swimming');
+      }
+      
+      // Animate fish across screen
+      const startTime = Date.now();
+      const startX = -100;
+      const endX = window.innerWidth + 100;
+      let animationActive = true;
+      
+      function animate() {
+        // Check if animation should continue
+        if (!animationActive) {
+          return;
+        }
+        // Don't check for hidden class - let animation continue even if hidden is temporarily added
+        if (!fishElement.parentNode) {
+          animationActive = false;
+          return;
+        }
+        
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / swimDuration, 1);
+        
+        // Constant speed movement (no easing)
+        const currentX = startX + (endX - startX) * progress;
+        fishElement.style.left = currentX + 'px';
+        
+        // Vertical bobbing motion - combine with scale if nearby
+        const bobAmount = Math.sin(progress * Math.PI * 4) * 10;
+        const isNearby = fishElement.classList.contains('nearby');
+        const scale = isNearby ? (fishElement.classList.contains('decorative-fish') ? '1.2' : '1.15') : '1';
+        fishElement.style.transform = `translateY(${bobAmount}px) scale(${scale})`;
+        
+        if (progress < 1) {
+          fishElement._animationId = requestAnimationFrame(animate);
+        } else {
+          // Animation complete, restart with new random Y
+          animationActive = false;
+          fishElement._animationId = null;
+          fishElement.classList.remove('swimming');
+          fishElement._animationTimeout = setTimeout(() => {
+            if (fishElement.parentNode && !fishElement.classList.contains('hidden')) {
+              animateFish(fishElement, swimDuration);
+            }
+          }, 500); // Small delay before respawning
+        }
+      }
+      
+      fishElement._animationId = requestAnimationFrame(animate);
+    }
+
+    function renderSeaAnimals() {
+      seaAnimalsContainer.innerHTML = '';
+
+      // Calculate the vertical spawn area: below waves (150px) and above sand (120px from bottom)
+      const waveBottom = 150; // Waves end at 150px from top
+      const sandTop = window.innerHeight - 120; // Sand starts 120px from bottom
+      const spawnAreaHeight = sandTop - waveBottom;
+      
+      // Minimum spacing between fish to prevent collisions
+      const minSpacing = 80; // Minimum vertical distance between fish
+      const usedYPositions = [];
+
+      state.filteredPages.forEach((page, index) => {
+        const animal = document.createElement('div');
+        animal.className = 'sea-animal';
+        animal.dataset.href = page.href;
+        animal.dataset.index = index;
+
+        // Find a unique Y position that doesn't collide with other fish
+        const randomY = getRandomYPosition(usedYPositions, waveBottom, spawnAreaHeight, minSpacing);
         usedYPositions.push(randomY);
         
         animal.style.top = randomY + 'px';
         animal.style.left = '-100px'; // Start off-screen left
 
         // Calculate animation delay based on index for staggered swimming
-        const animationDelay = index * 2; // 2 seconds between each fish
+        const animationDelay = index * 2000; // 2 seconds between each fish
+        
+        // Apply realistic fish colors
+        const fishColor = getRealisticFishColor();
         
         animal.innerHTML = `
           <div class="fish">
-            <img src="./assets/images/fish.gif" class="fish-gif active" alt="Fish">
+            <img src="./assets/images/seal.gif" class="fish-gif active" alt="Seal" style="filter: hue-rotate(${fishColor.hue}deg) saturate(${fishColor.saturation}%) brightness(${fishColor.brightness}%);">
             <div class="fish-label">${page.title}</div>
           </div>
         `;
-        
-        // Set animation delay for both swim and fade-in animations
-        animal.style.animationDelay = `${animationDelay}s, ${animationDelay}s`;
 
         seaAnimalsContainer.appendChild(animal);
+        
+        // Start animation after delay - slower for big fish
+        setTimeout(() => {
+          animateFish(animal, 25000); // 25 seconds instead of 15
+        }, animationDelay);
       });
     }
 
@@ -1727,14 +2225,37 @@
 
         await animateSharkTo(targetX, targetY, 800);
         
-        // Create blood pool at fish location
+        // Create blood pool at fish location (random blobby shape, wider than tall)
         const fishX = targetX;
         const fishY = targetY;
         const bloodPool = document.createElement('div');
         bloodPool.className = 'blood-pool';
-        bloodPool.style.left = (fishX - 60) + 'px';
-        bloodPool.style.top = (fishY - 60) + 'px';
+        
+        // Generate random blob shapes for animation
+        const startShape = getRandomBlobShape();
+        const midShape = getRandomBlobShapeMid();
+        const endShape = getRandomBlobShapeEnd();
+        
+        // Set initial border-radius
+        bloodPool.style.borderRadius = startShape;
+        
+        const finalWidth = 140;
+        const finalHeight = 110;
+        bloodPool.style.left = (fishX - finalWidth / 2) + 'px';
+        bloodPool.style.top = (fishY - finalHeight / 2) + 'px';
+        
+        // Store shapes for animation
+        bloodPool.dataset.startShape = startShape;
+        bloodPool.dataset.midShape = midShape;
+        bloodPool.dataset.endShape = endShape;
+        bloodPool.dataset.isDecorative = 'false';
+        bloodPool.dataset.finalWidth = finalWidth;
+        bloodPool.dataset.finalHeight = finalHeight;
+        
         document.body.appendChild(bloodPool);
+        
+        // Animate the blood pool with random blob shapes
+        animateBloodPool(bloodPool);
 
         // Create "nom nom nom" text above the shark
         const nomText = document.createElement('div');
@@ -1746,12 +2267,26 @@
         
         sharkEl.classList.add('biting');
         
-        // Hide the fish with scale animation - stop animations and hide
+        // Calculate new position at edge
+        const waveBottom = 150;
+        const sandTop = window.innerHeight - 120;
+        const spawnAreaHeight = sandTop - waveBottom;
+        const randomY = waveBottom + Math.random() * spawnAreaHeight;
+        
+        // Instantly stop all animations and move fish to edge
         firstAnimal.style.animation = 'none';
-        firstAnimal.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-        firstAnimal.style.opacity = '0';
-        firstAnimal.style.transform = 'scale(0)';
-        firstAnimal.classList.add('hidden');
+        firstAnimal.style.transition = 'none';
+        firstAnimal.style.opacity = '1';
+        firstAnimal.style.transform = 'translateY(0) scale(1)';
+        firstAnimal.style.left = '-100px';
+        firstAnimal.style.top = randomY + 'px';
+        firstAnimal.style.position = 'fixed';
+        firstAnimal.style.zIndex = '20';
+        firstAnimal.classList.remove('hidden');
+        
+        // Start swimming animation immediately at the edge using animateFish to prevent conflicts
+        const swimDuration = 25000;
+        animateFish(firstAnimal, swimDuration, true);
         
         // Wait for animation, then clean up
         setTimeout(() => {
@@ -1765,15 +2300,6 @@
       }
 
       await animateSharkTo(window.innerWidth / 2, window.innerHeight / 2, 1000);
-
-      // Restore the fish after intro animation
-      if (firstAnimal) {
-        firstAnimal.style.animation = '';
-        firstAnimal.style.transition = '';
-        firstAnimal.classList.remove('hidden');
-        firstAnimal.style.opacity = '';
-        firstAnimal.style.transform = '';
-      }
 
       state.introComplete = true;
       introOverlay.classList.remove('active');
@@ -2048,6 +2574,52 @@
     }
 
     // ============================================================================
+    // DECORATIVE FISH (Small fish for fun eating)
+    // ============================================================================
+    function createDecorativeFish() {
+      const decorativeFishContainer = document.getElementById('decorative-fish-container') || seaAnimalsContainer;
+      const waveBottom = 150;
+      const sandTop = window.innerHeight - 120;
+      const spawnAreaHeight = sandTop - waveBottom;
+      
+      // Create 15-20 decorative fish (more little fish)
+      const fishCount = 15 + Math.floor(Math.random() * 6);
+      
+      for (let i = 0; i < fishCount; i++) {
+        const decorativeFish = document.createElement('div');
+        decorativeFish.className = 'decorative-fish';
+        
+        // Random Y position
+        const randomY = waveBottom + Math.random() * spawnAreaHeight;
+        decorativeFish.style.top = randomY + 'px';
+        decorativeFish.style.left = '-100px';
+        
+        // Random swim duration (10-20 seconds for variety)
+        const swimDuration = 10000 + Math.random() * 10000;
+        
+        // Store swim duration for respawning
+        decorativeFish.dataset.swimDuration = swimDuration.toString();
+        
+        // Apply realistic fish colors to decorative fish
+        const fishColor = getRealisticFishColor();
+        
+        decorativeFish.innerHTML = `
+          <div class="fish">
+            <img src="./assets/images/fish.gif" class="fish-gif active" alt="Small Fish" style="filter: hue-rotate(${fishColor.hue}deg) saturate(${fishColor.saturation}%) brightness(${fishColor.brightness}%);">
+          </div>
+        `;
+        
+        decorativeFishContainer.appendChild(decorativeFish);
+        
+        // Start animation with random delay
+        const delay = Math.random() * 5000;
+        setTimeout(() => {
+          animateFish(decorativeFish, swimDuration);
+        }, delay);
+      }
+    }
+
+    // ============================================================================
     // INITIALIZATION
     // ============================================================================
     function init() {
@@ -2061,6 +2633,7 @@
       createCurrents();
       createSandPlumes();
       renderSeaAnimals();
+      createDecorativeFish();
 
       requestAnimationFrame(gameLoop);
 
@@ -2068,8 +2641,13 @@
         playIntroAnimation();
       }, 500);
 
+      // Debounce resize handler for better performance
+      let resizeTimeout;
       window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
         renderSeaAnimals();
+        }, 250);
       });
     }
 
