@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read/write access to pack profit stats
+    match /packProfitStats/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Allow read/write access to pack set stats
+    match /packSetStats/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Allow read/write access to pack clients
+    match /packClients/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+
+

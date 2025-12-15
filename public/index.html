@@ -1,0 +1,2662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dawson Peng's Personal Website</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --surface-blue: #4a90e2;
+      --mid-blue: #2e5c8a;
+      --deep-blue: #1a3a5c;
+      --deepest-blue: #0a1f2e;
+      --sand: #d4a574;
+      --sand-dark: #b8956a;
+      --text: #e7ecf3;
+      --muted: #b6c2d1;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      position: relative;
+      background: var(--surface-blue);
+    }
+
+    /* Water Wave Trail Effect */
+    .wave-trail {
+      position: fixed;
+      pointer-events: none;
+      z-index: 10000;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      animation: wave-expand 1s ease-out forwards;
+    }
+
+    @keyframes wave-expand {
+      0% {
+        width: 20px;
+        height: 20px;
+        opacity: 0.8;
+      }
+      100% {
+        width: 80px;
+        height: 80px;
+        opacity: 0;
+      }
+    }
+
+    /* Title */
+    .title-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .main-title {
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 
+        0 0 20px rgba(74, 144, 226, 0.6),
+        0 2px 10px rgba(0, 0, 0, 0.4),
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        0 6px 30px rgba(0, 0, 0, 0.2);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      animation: title-float 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .subtitle {
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.2);
+      font-weight: 400;
+      letter-spacing: -0.2px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    @keyframes title-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* Ocean Background System */
+    .ocean-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    /* Sky Background */
+    .sky-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(
+        to bottom,
+        #87CEEB 0%,
+        #6BB6FF 50%,
+        #4A9EFF 100%
+      );
+      z-index: 0;
+    }
+
+    .ocean-bg {
+      position: absolute;
+      top: 150px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 150px);
+      background: linear-gradient(
+        to bottom,
+        #156575 0%,
+        #0f4d5a 15%,
+        #0a3540 35%,
+        #062028 60%,
+        #031419 100%
+      );
+      background-image: 
+        /* Light rays from surface */
+        linear-gradient(45deg, rgba(255, 255, 255, 0.15) 0%, transparent 30%),
+        linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 0%, transparent 25%),
+        linear-gradient(30deg, rgba(255, 255, 255, 0.08) 0%, transparent 20%),
+        /* Light refraction effects */
+        radial-gradient(ellipse 80% 20% at 30% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 15% at 70% 15%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(ellipse 50% 10% at 50% 10%, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
+        /* Depth variations */
+        radial-gradient(circle at 20% 30%, rgba(100, 150, 180, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(80, 130, 160, 0.05) 0%, transparent 50%);
+      background-size: 
+        200% 200%, 200% 200%, 200% 200%,
+        150% 150%, 150% 150%, 150% 150%,
+        200% 200%, 150% 150%;
+      background-position:
+        0% 0%, 100% 0%, 50% 0%,
+        0% 0%, 100% 0%, 50% 0%,
+        0% 0%, 100% 100%;
+      animation: water-texture 20s ease-in-out infinite, light-rays 8s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes light-rays {
+      0%, 100% { 
+        background-position:
+          0% 0%, 100% 0%, 50% 0%,
+          0% 0%, 100% 0%, 50% 0%,
+          0% 0%, 100% 100%;
+      }
+      50% { 
+        background-position:
+          50% 10%, 50% 10%, 50% 5%,
+          20% 5%, 80% 5%, 50% 3%,
+          0% 0%, 100% 100%;
+      }
+    }
+
+    @keyframes water-texture {
+      0%, 100% { 
+        background-position:
+          0% 0%, 100% 0%, 50% 0%,
+          0% 0%, 100% 0%, 50% 0%,
+          0% 0%, 100% 100%;
+      }
+      50% { 
+        background-position:
+          100% 20%, 0% 20%, 50% 15%,
+          50% 10%, 50% 10%, 50% 8%,
+          100% 100%, 0% 0%;
+      }
+    }
+
+    /* Wave Animations - SVG Waves */
+    .waves {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 150px;
+      overflow: hidden;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .wave-svg {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      animation: wave-move 3s linear infinite;
+      mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+    }
+
+    .wave-svg:nth-child(1) {
+      animation-duration: 3s;
+      opacity: 0.7;
+    }
+
+    .wave-svg:nth-child(2) {
+      animation-duration: 4s;
+      animation-delay: -1s;
+      opacity: 0.5;
+    }
+
+    .wave-svg:nth-child(3) {
+      animation-duration: 5s;
+      animation-delay: -2s;
+      opacity: 0.3;
+    }
+
+    @keyframes wave-move {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0%); }
+    }
+
+    /* Ocean Floor - Sand */
+    .ocean-floor {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      background: 
+        linear-gradient(to bottom, transparent 0%, var(--sand-dark) 100%),
+        repeating-linear-gradient(
+          90deg,
+          var(--sand) 0px,
+          var(--sand-dark) 2px,
+          var(--sand) 4px,
+          var(--sand) 6px
+        );
+      background-size: 100% 100%, 8px 8px;
+      z-index: 3;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Background Details */
+    .background-details {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .kelp {
+      position: absolute;
+      bottom: 120px;
+      width: 20px;
+      height: 200px;
+      background: linear-gradient(to right, #2d5016 0%, #4a7c2a 50%, #2d5016 100%);
+      border-radius: 10px;
+      animation: kelp-sway 4s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+
+    .kelp::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 20px;
+      background: #4a7c2a;
+      border-radius: 50% 50% 0 0;
+    }
+
+    @keyframes kelp-sway {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+
+    .rock {
+      position: absolute;
+      bottom: 120px;
+      width: 60px;
+      height: 40px;
+      background: #5a5a5a;
+      border-radius: 50% 50% 30% 30%;
+      box-shadow: inset -5px -5px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Score Rock - Bottom Right */
+    .score-rock {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      z-index: 101;
+      width: 180px;
+      height: 120px;
+      background: linear-gradient(135deg, 
+        rgba(80, 70, 60, 0.95) 0%,
+        rgba(60, 50, 40, 0.95) 50%,
+        rgba(70, 60, 50, 0.95) 100%);
+      border-radius: 15px 45px 15px 45px;
+      border: 3px solid rgba(100, 90, 80, 0.8);
+      box-shadow: 
+        inset 0 3px 6px rgba(0, 0, 0, 0.6),
+        inset 0 -3px 6px rgba(255, 255, 255, 0.1),
+        0 6px 16px rgba(0, 0, 0, 0.7),
+        0 3px 8px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      pointer-events: none;
+    }
+    
+    .score-rock::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px);
+      border-radius: 15px 45px 15px 45px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    
+    .score-label {
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(200, 190, 180, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.2),
+        0 -1px 0 rgba(0, 0, 0, 0.8),
+        1px 0 0 rgba(0, 0, 0, 0.6),
+        -1px 0 0 rgba(0, 0, 0, 0.6);
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .score-value {
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: rgba(255, 200, 100, 0.95);
+      text-shadow: 
+        0 2px 0 rgba(0, 0, 0, 0.8),
+        0 0 8px rgba(255, 200, 100, 0.5),
+        0 0 16px rgba(255, 200, 100, 0.3);
+      position: relative;
+      z-index: 1;
+      line-height: 1;
+    }
+
+    .clam {
+      position: absolute;
+      bottom: 120px;
+      width: 40px;
+      height: 25px;
+      background: #fff8dc;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .clam::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: linear-gradient(to bottom, #fff8dc 0%, #f0e68c 100%);
+      border-radius: 50% 50% 0 0;
+    }
+
+    /* Boat */
+    .boat {
+      position: fixed;
+      top: 95px;
+      right: -150px;
+      width: 100px;
+      height: 55px;
+      z-index: 15;
+      animation: boat-float 30s linear infinite, boat-bob 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes boat-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes boat-float {
+      0% { right: -150px; }
+      100% { right: calc(100% + 150px); }
+    }
+
+    .boat-body {
+      width: 100%;
+      height: 35px;
+      background: #8b4513;
+      border-radius: 0 0 50% 50%;
+      position: relative;
+      box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .boat-mast {
+      position: absolute;
+      left: 50%;
+      top: -28px;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 28px;
+      background: #654321;
+    }
+
+    .boat-sail {
+      position: absolute;
+      left: 50%;
+      top: -24px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-right: 20px solid #ffffff;
+      border-top: 14px solid transparent;
+      border-bottom: 14px solid transparent;
+    }
+
+    /* Search Bar */
+    .search-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      width: 200px;
+    }
+
+    .search {
+      position: relative;
+      width: 100%;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 12px;
+      font-weight: 400;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      text-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.5),
+        0 0 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .search input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .search input::placeholder {
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+
+    .search svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.8;
+      fill: var(--text);
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Shark - GIF Animation Support */
+    .shark {
+      position: fixed;
+      width: 360px;
+      height: 135px;
+      z-index: 50;
+      transform-origin: center center;
+      transition: transform 0.2s ease-out;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .shark-body {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    /* Shark GIF Animations - Left and Right */
+    .shark-gif {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .shark-gif-left {
+      display: none;
+    }
+
+    .shark-gif-right {
+      display: block; /* Default to right-facing */
+    }
+
+    /* Shark Current Trail */
+    .shark-trail {
+      position: fixed;
+      pointer-events: none;
+      z-index: 45;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      animation: trail-fade 1.5s ease-out forwards;
+    }
+
+    @keyframes trail-fade {
+      0% {
+        width: 30px;
+        height: 30px;
+        opacity: 0.6;
+      }
+      100% {
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+      }
+    }
+
+    /* Bite Animation */
+    .bite-effect {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+      pointer-events: none;
+      animation: bite-pulse 0.5s ease-out;
+      z-index: 51;
+    }
+
+    @keyframes bite-pulse {
+      0% {
+        transform: scale(0.3);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    /* Blood Pool Effect */
+    .blood-pool {
+      position: fixed;
+      /* border-radius will be set dynamically via JavaScript for random blob shapes */
+      background: radial-gradient(ellipse 85% 75% at 45% 40%, rgba(200, 0, 0, 0.8) 0%, rgba(150, 0, 0, 0.6) 35%, rgba(100, 0, 0, 0.4) 60%, rgba(80, 0, 0, 0.2) 85%, transparent 100%);
+      pointer-events: none;
+      z-index: 45;
+      transform-origin: center;
+      filter: blur(2px);
+    }
+    
+    /* Blood pool persistent state - stays visible longer */
+    .blood-pool.persistent {
+      animation: none;
+      opacity: 0.5;
+    }
+    
+    .blood-pool.small.persistent {
+      opacity: 0.4;
+    }
+
+    /* Nom Nom Nom Text */
+    .nom-text {
+      position: fixed;
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 24px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.95);
+      pointer-events: none;
+      z-index: 52;
+      text-shadow: 
+        0 0 10px rgba(200, 0, 0, 0.8),
+        0 2px 8px rgba(0, 0, 0, 0.8),
+        0 4px 16px rgba(0, 0, 0, 0.6);
+      animation: nom-bounce 1.5s ease-out forwards;
+      white-space: nowrap;
+      letter-spacing: -0.3px;
+    }
+    
+    .nom-text.small {
+      font-size: 14px;
+      animation: nom-bounce-small 1.2s ease-out forwards;
+    }
+
+    @keyframes nom-bounce {
+      0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+      }
+      20% {
+        transform: translateY(-30px) scale(1.1);
+        opacity: 1;
+      }
+      40% {
+        transform: translateY(-50px) scale(1);
+      }
+      60% {
+        transform: translateY(-45px) scale(0.95);
+      }
+      80% {
+        transform: translateY(-60px) scale(0.9);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-80px) scale(0.7);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes nom-bounce-small {
+      0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+      }
+      20% {
+        transform: translateY(-20px) scale(1.1);
+        opacity: 1;
+      }
+      40% {
+        transform: translateY(-35px) scale(1);
+      }
+      60% {
+        transform: translateY(-30px) scale(0.95);
+      }
+      80% {
+        transform: translateY(-40px) scale(0.9);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-50px) scale(0.7);
+        opacity: 0;
+      }
+    }
+
+    /* Sea Animals (Page Cards) - Swimming Animation */
+    .sea-animal {
+      position: fixed;
+      z-index: 20;
+      cursor: pointer;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
+      opacity: 0;
+    }
+    
+    .sea-animal.swimming {
+      animation: fade-in-on-start 0.5s ease-in forwards;
+    }
+    
+    /* Decorative small fish */
+    .decorative-fish {
+      position: fixed;
+      z-index: 15;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
+      opacity: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .decorative-fish.swimming {
+      animation: fade-in-on-start 0.3s ease-in forwards;
+    }
+    
+    .decorative-fish .fish {
+      width: 100px;
+      height: 60px;
+      animation: fish-bob 1.5s ease-in-out infinite;
+    }
+    
+    .decorative-fish.hidden {
+      opacity: 0 !important;
+      pointer-events: none;
+      animation: none !important;
+      transform: scale(0) !important;
+    }
+
+    @keyframes fade-in-on-start {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes swim-across {
+      0% {
+        left: -100px;
+        transform: translateY(0);
+      }
+      25% {
+        transform: translateY(-10px);
+      }
+      50% {
+        transform: translateY(0);
+      }
+      75% {
+        transform: translateY(10px);
+      }
+      100% {
+        left: calc(100% + 100px);
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes swim-across-small {
+      0% {
+        left: -100px;
+        transform: translateY(0);
+      }
+      25% {
+        transform: translateY(-5px);
+      }
+      50% {
+        transform: translateY(0);
+      }
+      75% {
+        transform: translateY(5px);
+      }
+      100% {
+        left: calc(100% + 100px);
+        transform: translateY(0);
+      }
+    }
+
+    .sea-animal.nearby {
+      transform: scale(1.15) !important;
+      opacity: 1;
+      filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+    }
+    
+    .decorative-fish.nearby {
+      transform: scale(1.2) !important;
+      opacity: 1;
+      filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5));
+    }
+
+    .sea-animal.hidden {
+      opacity: 0 !important;
+      pointer-events: none;
+      animation: none !important;
+      transform: scale(0) !important;
+    }
+
+    /* Fish - GIF Animation Support */
+    .fish {
+      width: 210px;
+      height: 135px;
+      position: relative;
+      animation: fish-bob 2s ease-in-out infinite;
+    }
+
+    @keyframes fish-bob {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    /* GIF Animation Placeholders */
+    .fish-gif {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+
+    .fish-gif.active {
+      display: block;
+    }
+
+    /* Fallback CSS fish when GIFs not available */
+    .fish-body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
+      border-radius: 60% 25px 30px 60%;
+      position: relative;
+      box-shadow: 
+        0 2px 10px rgba(0, 0, 0, 0.3),
+        inset -8px 0 8px rgba(0, 0, 0, 0.15);
+      animation: fish-swim 2s ease-in-out infinite;
+    }
+
+    /* Hide fallback when GIF is active */
+    .fish:has(.fish-gif.active) .fish-body {
+      display: none;
+    }
+
+    @keyframes fish-swim {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(-3deg); }
+      75% { transform: translateY(5px) rotate(3deg); }
+    }
+
+    .fish-tail {
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      border-left: 18px solid #2563eb;
+      animation: tail-wiggle 0.3s ease-in-out infinite;
+    }
+
+    @keyframes tail-wiggle {
+      0%, 100% { transform: translateY(-50%) rotate(0deg); }
+      50% { transform: translateY(-50%) rotate(10deg); }
+    }
+
+    .fish-fin-top {
+      position: absolute;
+      top: -8px;
+      right: 20px;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 10px solid #3b82f6;
+    }
+
+    .fish-fin-bottom {
+      position: absolute;
+      bottom: -8px;
+      right: 20px;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 10px solid #3b82f6;
+    }
+
+    .fish-eye {
+      position: absolute;
+      top: 12px;
+      left: 15px;
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+
+    .fish-eye::after {
+      content: '';
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 3px;
+      height: 3px;
+      background: #1e40af;
+      border-radius: 50%;
+    }
+
+    .fish-scales {
+      position: absolute;
+      top: 8px;
+      left: 25px;
+      width: 30px;
+      height: 25px;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent 0px,
+        transparent 4px,
+        rgba(255, 255, 255, 0.1) 4px,
+        rgba(255, 255, 255, 0.1) 6px
+      );
+      opacity: 0.3;
+    }
+
+    .fish-label {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text);
+      opacity: 1;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      text-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.9),
+        0 0 12px rgba(0, 0, 0, 0.7),
+        0 4px 16px rgba(0, 0, 0, 0.5);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+      letter-spacing: -0.1px;
+    }
+
+    .sea-animal.nearby .fish-label {
+      transform: translateX(-50%) scale(1.1);
+    }
+
+    /* Ocean Currents - Visible Streams */
+    .ocean-currents {
+      position: absolute;
+      top: 150px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 150px);
+      pointer-events: none;
+      z-index: 6;
+      overflow: hidden;
+    }
+
+    .current-stream {
+      position: absolute;
+      width: 200px;
+      height: 3px;
+      background: linear-gradient(90deg, 
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.2) 80%,
+        transparent 100%
+      );
+      border-radius: 2px;
+      animation: current-flow 12s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes current-flow {
+      0% {
+        left: -200px;
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      100% {
+        left: calc(100% + 200px);
+        opacity: 0;
+      }
+    }
+
+    /* Sand Dust Plumes */
+    .sand-plumes {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      pointer-events: none;
+      z-index: 7;
+      overflow: hidden;
+    }
+
+    .sand-plume {
+      position: absolute;
+      width: 150px;
+      height: 80px;
+      background: radial-gradient(ellipse, 
+        rgba(212, 165, 116, 0.4) 0%,
+        rgba(212, 165, 116, 0.25) 30%,
+        rgba(212, 165, 116, 0.15) 60%,
+        transparent 100%
+      );
+      border-radius: 50%;
+      animation: plume-drift 15s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes plume-drift {
+      0% {
+        left: -150px;
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.5;
+      }
+      50% {
+        transform: translateY(-20px) scale(1);
+      }
+      90% {
+        opacity: 0.5;
+      }
+      100% {
+        left: calc(100% + 150px);
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    /* Drifting Particles - Ocean Current */
+    .ocean-particles {
+      position: absolute;
+      top: 150px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 150px);
+      pointer-events: none;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      animation: drift-right linear infinite;
+      opacity: 0.4;
+    }
+
+    .particle.small {
+      width: 4px;
+      height: 4px;
+    }
+
+    .particle.medium {
+      width: 6px;
+      height: 6px;
+    }
+
+    .particle.large {
+      width: 8px;
+      height: 8px;
+    }
+
+    @keyframes drift-right {
+      0% {
+        transform: translateX(-20px) translateY(calc(var(--drift-y, 0px) * 0));
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.4;
+      }
+      50% {
+        transform: translateX(calc(50vw)) translateY(calc(var(--drift-y, 0px) * 0.5));
+      }
+      90% {
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateX(calc(100vw + 20px)) translateY(calc(var(--drift-y, 0px) * 1));
+        opacity: 0;
+      }
+    }
+
+
+    /* Instructions - Etched on Rock */
+    .instructions {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: linear-gradient(135deg, 
+        rgba(80, 70, 60, 0.95) 0%,
+        rgba(60, 50, 40, 0.95) 50%,
+        rgba(70, 60, 50, 0.95) 100%);
+      backdrop-filter: blur(5px);
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(200, 190, 180, 0.9);
+      text-align: center;
+      opacity: 0.9;
+      border: 3px solid rgba(100, 90, 80, 0.8);
+      white-space: nowrap;
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.5),
+        inset 0 -2px 4px rgba(255, 255, 255, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.6),
+        0 2px 6px rgba(0, 0, 0, 0.4);
+      text-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.2),
+        0 -1px 0 rgba(0, 0, 0, 0.8),
+        1px 0 0 rgba(0, 0, 0, 0.6),
+        -1px 0 0 rgba(0, 0, 0, 0.6);
+      font-family: 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    
+    .instructions::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px);
+      border-radius: 12px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* Intro Animation Overlay */
+    .intro-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .intro-overlay.active {
+      pointer-events: all;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .shark {
+        width: 240px;
+        height: 100px;
+      }
+
+      .fish {
+        width: 180px;
+        height: 115px;
+      }
+
+      .search-container {
+        width: 150px;
+        right: 10px;
+      }
+
+      .main-title {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Dawson Peng's Personal Website">
+</head>
+<body>
+  <!-- Water Wave Trail Container -->
+  <div id="wave-trail-container"></div>
+  
+  <!-- Shark Current Trail Container -->
+  <div id="shark-trail-container"></div>
+
+  <!-- Ocean Background -->
+  <div class="ocean-container">
+    <div class="sky-bg"></div>
+    <div class="ocean-bg" id="ocean-bg"></div>
+    <div class="ocean-particles" id="ocean-particles"></div>
+    <div class="ocean-currents" id="ocean-currents"></div>
+    <div class="sand-plumes" id="sand-plumes"></div>
+    <div class="waves">
+      <svg class="wave-svg" viewBox="0 0 1200 150" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="waveGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,0.2);stop-opacity:1" />
+            <stop offset="60%" style="stop-color:rgba(255,255,255,0.12);stop-opacity:1" />
+            <stop offset="85%" style="stop-color:rgba(21,101,117,0.3);stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:rgba(21,101,117,1);stop-opacity:1" />
+          </linearGradient>
+          <linearGradient id="waveGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,0.15);stop-opacity:1" />
+            <stop offset="60%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" />
+            <stop offset="85%" style="stop-color:rgba(21,101,117,0.25);stop-opacity:0.25" />
+            <stop offset="100%" style="stop-color:rgba(21,101,117,1);stop-opacity:1" />
+          </linearGradient>
+          <linearGradient id="waveGradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" />
+            <stop offset="60%" style="stop-color:rgba(255,255,255,0.06);stop-opacity:1" />
+            <stop offset="85%" style="stop-color:rgba(21,101,117,0.2);stop-opacity:0.2" />
+            <stop offset="100%" style="stop-color:rgba(21,101,117,1);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M0,75 Q300,25 600,75 T1200,75 L1200,150 L0,150 Z" fill="url(#waveGradient1)"/>
+      </svg>
+      <svg class="wave-svg" viewBox="0 0 1200 150" preserveAspectRatio="none">
+        <path d="M0,85 Q300,35 600,85 T1200,85 L1200,150 L0,150 Z" fill="url(#waveGradient2)"/>
+      </svg>
+      <svg class="wave-svg" viewBox="0 0 1200 150" preserveAspectRatio="none">
+        <path d="M0,95 Q300,45 600,95 T1200,95 L1200,150 L0,150 Z" fill="url(#waveGradient3)"/>
+      </svg>
+      </div>
+    <div class="background-details" id="background-details"></div>
+    <div class="ocean-floor" id="ocean-floor"></div>
+  </div>
+
+  <!-- Title -->
+  <div class="title-container">
+    <h1 class="main-title">Dawson Peng's Personal Website</h1>
+  </div>
+
+  <!-- Boat -->
+  <div class="boat">
+    <div class="boat-body">
+      <div class="boat-mast"></div>
+      <div class="boat-sail"></div>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <label class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21.53 20.47l-3.66-3.66A8.5 8.5 0 1019 17l3.66 3.66a.75.75 0 11-1.06 1.06zM10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"/>
+      </svg>
+      <input id="search" type="search" placeholder="Search fish..." aria-label="Search pages">
+    </label>
+  </div>
+
+  <!-- Shark -->
+  <div class="shark" id="shark">
+    <div class="shark-body">
+      <!-- Left and Right GIF Animations -->
+      <img src="./assets/images/sharkleft.gif" class="shark-gif shark-gif-left" id="shark-gif-left" alt="Shark left">
+      <img src="./assets/images/sharkright.gif" class="shark-gif shark-gif-right" id="shark-gif-right" alt="Shark right">
+    </div>
+  </div>
+
+  <!-- Sea Animals Container -->
+  <div id="sea-animals-container"></div>
+
+  <!-- Instructions -->
+  <div class="instructions" id="instructions">
+    Use WASD or Arrow Keys to move • Press Space to go to a webpage
+  </div>
+
+  <!-- Score Rock -->
+  <div class="score-rock" id="score-rock">
+    <div class="score-label">Fish Eaten</div>
+    <div class="score-value" id="score-value">0</div>
+  </div>
+
+  <!-- Intro Overlay -->
+  <div class="intro-overlay" id="intro-overlay"></div>
+
+  <script>
+    // ============================================================================
+    // PAGE CONFIGURATION
+    // ============================================================================
+    // To add a new page as a sea animal, add an object to the pages array below.
+    // Each page should have:
+    //   - title: Display name
+    //   - href: Link to the page
+    //   - badge: Category badge (optional)
+    //   - icon: Emoji or icon (optional)
+    //   - description: Description text (optional)
+    //   - x: Horizontal position (0-100, percentage of viewport width)
+    //   - y: Vertical position (0-100, percentage of viewport height from top)
+    // The sea animal will be positioned at these coordinates and can be
+    // interacted with by swimming the shark nearby and pressing spacebar.
+    // ============================================================================
+    const pages = [
+      {
+        title: "Pack Profit Game (AP Econ)",
+        href: "./packs-econ.html",
+        badge: "Econ",
+        icon: "💹",
+        description: "Open 10 packs and compute costs & profits.",
+        x: 30,
+        y: 40
+      },
+      {
+        title: "My Github",
+        href: "https://github.com/dawsonpeng",
+        badge: "GitHub",
+        icon: "🐙",
+        description: "Check out my GitHub profile and repositories.",
+        x: 70,
+        y: 60
+      }
+    ];
+
+    // ============================================================================
+    // GAME STATE
+    // ============================================================================
+    const state = {
+      shark: {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+        vx: 0,
+        vy: 0,
+        speed: 10,
+        facing: 'right',
+        isMoving: false
+      },
+      keys: {
+        up: false,
+        down: false,
+        left: false,
+        right: false
+      },
+      introComplete: false,
+      nearbyAnimal: null,
+      filteredPages: pages,
+      score: 0
+    };
+
+    // ============================================================================
+    // DOM ELEMENTS
+    // ============================================================================
+    const sharkEl = document.getElementById('shark');
+    const oceanBg = document.getElementById('ocean-bg');
+    const seaAnimalsContainer = document.getElementById('sea-animals-container');
+    const searchInput = document.getElementById('search');
+    const instructions = document.getElementById('instructions');
+    const introOverlay = document.getElementById('intro-overlay');
+    const backgroundDetails = document.getElementById('background-details');
+    const oceanParticles = document.getElementById('ocean-particles');
+    const oceanCurrents = document.getElementById('ocean-currents');
+    const sandPlumes = document.getElementById('sand-plumes');
+    const waveTrailContainer = document.getElementById('wave-trail-container');
+    const sharkTrailContainer = document.getElementById('shark-trail-container');
+    const scoreValueEl = document.getElementById('score-value');
+
+    // GIF elements (if they exist)
+    const sharkGifLeft = document.getElementById('shark-gif-left');
+    const sharkGifRight = document.getElementById('shark-gif-right');
+
+    // ============================================================================
+    // GIF ANIMATION SWITCHING
+    // ============================================================================
+    function updateSharkGif() {
+      if (!sharkGifLeft || !sharkGifRight) return; // GIFs not loaded
+
+      // Switch based on horizontal movement direction
+      if (state.shark.vx < 0) {
+        // Moving left
+        sharkGifLeft.style.display = 'block';
+        sharkGifRight.style.display = 'none';
+      } else if (state.shark.vx > 0) {
+        // Moving right
+        sharkGifLeft.style.display = 'none';
+        sharkGifRight.style.display = 'block';
+      }
+      // If vx === 0 (not moving horizontally), keep current GIF
+    }
+
+    // ============================================================================
+    // BACKGROUND DETAILS GENERATION
+    // ============================================================================
+    function generateBackgroundDetails() {
+      // Generate kelp
+      for (let i = 0; i < 15; i++) {
+        const kelp = document.createElement('div');
+        kelp.className = 'kelp';
+        kelp.style.left = Math.random() * 100 + '%';
+        kelp.style.height = (150 + Math.random() * 150) + 'px';
+        kelp.style.animationDelay = Math.random() * 4 + 's';
+        backgroundDetails.appendChild(kelp);
+      }
+
+      // Generate rocks
+      for (let i = 0; i < 10; i++) {
+        const rock = document.createElement('div');
+        rock.className = 'rock';
+        rock.style.left = Math.random() * 100 + '%';
+        rock.style.width = (40 + Math.random() * 40) + 'px';
+        rock.style.height = (30 + Math.random() * 30) + 'px';
+        backgroundDetails.appendChild(rock);
+      }
+
+      // Generate clams
+      for (let i = 0; i < 8; i++) {
+        const clam = document.createElement('div');
+        clam.className = 'clam';
+        clam.style.left = Math.random() * 100 + '%';
+        backgroundDetails.appendChild(clam);
+      }
+    }
+
+    // ============================================================================
+    // SHARK MOVEMENT
+    // ============================================================================
+    function updateSharkPosition() {
+      const sharkWidth = 360;
+      const sharkHeight = 135;
+      const surfaceHeight = 150; // Ocean surface (waves area)
+      // Allow shark to swim very close to the sand (just above it)
+      const sandTop = window.innerHeight - 120; // Sand starts 120px from bottom
+      const maxSharkY = sandTop - 10; // Allow shark to go very close to sand (10px clearance)
+
+      // Check boundaries
+      const sharkHalfWidth = sharkWidth / 2;
+      const minX = sharkHalfWidth;
+      const maxX = window.innerWidth - sharkHalfWidth;
+      const minY = surfaceHeight + sharkHeight / 2;
+      const maxY = maxSharkY;
+
+      const prevX = state.shark.x;
+      const prevY = state.shark.y;
+
+      state.shark.vx = 0;
+      state.shark.vy = 0;
+      state.shark.isMoving = false;
+
+      // Check if shark is at boundaries (with small tolerance for floating point)
+      const tolerance = 0.1;
+      const atLeftBoundary = Math.abs(state.shark.x - minX) < tolerance;
+      const atRightBoundary = Math.abs(state.shark.x - maxX) < tolerance;
+      const atTopBoundary = Math.abs(state.shark.y - minY) < tolerance;
+      const atBottomBoundary = Math.abs(state.shark.y - maxY) < tolerance;
+
+      // Horizontal movement - only allow if not at boundary or moving away from boundary
+      if (state.keys.left) {
+        if (!atLeftBoundary) {
+          state.shark.vx = -state.shark.speed;
+          state.shark.facing = 'left';
+          state.shark.isMoving = true;
+        }
+      }
+      if (state.keys.right) {
+        if (!atRightBoundary) {
+          state.shark.vx = state.shark.speed;
+          state.shark.facing = 'right';
+          state.shark.isMoving = true;
+        }
+      }
+      
+      // Vertical movement - only allow if not at boundary or moving away from boundary
+      if (state.keys.up) {
+        if (!atTopBoundary) {
+          state.shark.vy = -state.shark.speed;
+          state.shark.isMoving = true;
+        }
+      }
+      if (state.keys.down) {
+        if (!atBottomBoundary) {
+          state.shark.vy = state.shark.speed;
+          state.shark.isMoving = true;
+        }
+      }
+
+      if (state.shark.vx !== 0 && state.shark.vy !== 0) {
+        state.shark.vx *= 0.707;
+        state.shark.vy *= 0.707;
+      }
+
+      state.shark.x += state.shark.vx;
+      state.shark.y += state.shark.vy;
+
+      // Clamp position to boundaries (prevent going off screen or beyond ocean limits)
+      if (state.shark.x < minX) {
+        state.shark.x = minX;
+      } else if (state.shark.x > maxX) {
+        state.shark.x = maxX;
+      }
+      
+      if (state.shark.y < minY) {
+        state.shark.y = minY;
+      } else if (state.shark.y > maxY) {
+        state.shark.y = maxY;
+      }
+
+      sharkEl.style.left = (state.shark.x - sharkWidth / 2) + 'px';
+      sharkEl.style.top = (state.shark.y - sharkHeight / 2) + 'px';
+      
+      // Create current trail when shark is moving
+      if (state.shark.isMoving && (state.shark.x !== prevX || state.shark.y !== prevY)) {
+        createSharkTrail(state.shark.x, state.shark.y);
+      }
+      
+      // Update GIF based on horizontal movement direction
+      updateSharkGif();
+      
+      // Calculate rotation angle based on movement direction
+      // sharkleft.gif: head on left, so rotation is inverted (head goes up when rotating up)
+      // sharkright.gif: head on right, rotation is normal (head goes up when rotating up)
+      let rotationAngle = 0;
+      
+      if (state.shark.vx !== 0 || state.shark.vy !== 0) {
+        // Calculate angle from vertical movement (up/down)
+        if (state.shark.vx === 0) {
+          // Pure vertical movement - angle is 90° (down) or -90° (up)
+          rotationAngle = state.shark.vy > 0 ? 90 : -90;
+        } else {
+          // Diagonal or horizontal movement
+          rotationAngle = Math.atan2(state.shark.vy, Math.abs(state.shark.vx)) * (180 / Math.PI);
+          rotationAngle = Math.max(-90, Math.min(90, rotationAngle));
+        }
+        
+        // If using sharkleft.gif (head on left), invert rotation
+        // Check facing direction, not just vx, in case vx is 0 (vertical-only movement)
+        if (state.shark.facing === 'left') {
+          rotationAngle = -rotationAngle;
+        }
+      }
+      
+      sharkEl.style.transform = `rotate(${rotationAngle}deg)`;
+      sharkEl.classList.toggle('facing-left', state.shark.facing === 'left');
+      sharkEl.classList.toggle('facing-right', state.shark.facing === 'right');
+      sharkEl.classList.toggle('moving', state.shark.isMoving);
+    }
+
+    // ============================================================================
+    // KEYBOARD CONTROLS
+    // ============================================================================
+    function handleKeyDown(e) {
+      if (!state.introComplete) return;
+
+      const key = e.key.toLowerCase();
+      if (key === 'w' || key === 'arrowup') state.keys.up = true;
+      if (key === 's' || key === 'arrowdown') state.keys.down = true;
+      if (key === 'a' || key === 'arrowleft') state.keys.left = true;
+      if (key === 'd' || key === 'arrowright') state.keys.right = true;
+      if (key === ' ') {
+        e.preventDefault();
+        handleBite();
+      }
+    }
+
+    function handleKeyUp(e) {
+      const key = e.key.toLowerCase();
+      if (key === 'w' || key === 'arrowup') state.keys.up = false;
+      if (key === 's' || key === 'arrowdown') state.keys.down = false;
+      if (key === 'a' || key === 'arrowleft') state.keys.left = false;
+      if (key === 'd' || key === 'arrowright') state.keys.right = false;
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+
+    // ============================================================================
+    // PROXIMITY DETECTION & BITE INTERACTION
+    // ============================================================================
+    function checkProximity() {
+      const proximityRadius = 90;
+      let nearestAnimal = null;
+      let nearestDistance = Infinity;
+
+      // Include both regular sea animals and decorative fish
+      const animals = document.querySelectorAll('.sea-animal:not(.hidden), .decorative-fish:not(.hidden)');
+      const sharkX = state.shark.x;
+      const sharkY = state.shark.y;
+
+      animals.forEach(animal => {
+        const rect = animal.getBoundingClientRect();
+        if (rect.bottom < -100 || rect.top > window.innerHeight + 100 ||
+            rect.right < -100 || rect.left > window.innerWidth + 100) {
+          return;
+        }
+
+        const animalX = rect.left + rect.width / 2;
+        const animalY = rect.top + rect.height / 2;
+
+        const dx = animalX - sharkX;
+        const dy = animalY - sharkY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < proximityRadius && distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestAnimal = animal;
+        }
+      });
+
+      // Update nearby class for all animals
+      animals.forEach(animal => {
+        const wasNearby = animal.classList.contains('nearby');
+        const isNearby = animal === nearestAnimal;
+        
+        animal.classList.toggle('nearby', isNearby);
+        
+        // When fish becomes nearby, preserve its current transform for bobbing
+        // and combine with scale effect
+        if (isNearby && !wasNearby) {
+          const currentTransform = animal.style.transform || '';
+          // Extract translateY value if it exists, or use 0
+          const translateYMatch = currentTransform.match(/translateY\(([^)]+)\)/);
+          const translateY = translateYMatch ? translateYMatch[1] : '0px';
+          // Apply scale while preserving translateY for smooth bobbing
+          animal.style.transform = `translateY(${translateY}) scale(1.15)`;
+        } else if (!isNearby && wasNearby) {
+          // When no longer nearby, remove scale but keep translateY
+          const currentTransform = animal.style.transform || '';
+          const translateYMatch = currentTransform.match(/translateY\(([^)]+)\)/);
+          animal.style.transform = translateYMatch ? `translateY(${translateYMatch[1]})` : '';
+        }
+      });
+
+      state.nearbyAnimal = nearestAnimal;
+    }
+
+    function updateScore() {
+      if (scoreValueEl) {
+        scoreValueEl.textContent = state.score;
+      }
+    }
+
+    function handleBite() {
+      if (!state.nearbyAnimal) return;
+
+      // Check if it's a decorative fish (no href)
+      const href = state.nearbyAnimal.dataset.href;
+      const isDecorative = state.nearbyAnimal.classList.contains('decorative-fish');
+      
+      // Store swim duration for respawning decorative fish
+      const swimDuration = state.nearbyAnimal.dataset.swimDuration 
+        ? parseInt(state.nearbyAnimal.dataset.swimDuration) 
+        : 10000 + Math.random() * 10000;
+
+      sharkEl.classList.add('biting');
+
+      // Get fish position for blood pool and text
+      const fishRect = state.nearbyAnimal.getBoundingClientRect();
+      const fishX = fishRect.left + fishRect.width / 2;
+      const fishY = fishRect.top + fishRect.height / 2;
+
+      // Create blood pool at fish location - random blobby shape (wider than tall)
+      const bloodPool = document.createElement('div');
+      bloodPool.className = isDecorative ? 'blood-pool small' : 'blood-pool';
+      
+      // Generate random blob shapes for animation
+      const startShape = getRandomBlobShape();
+      const midShape = getRandomBlobShapeMid();
+      const endShape = getRandomBlobShapeEnd();
+      
+      // Set initial border-radius
+      bloodPool.style.borderRadius = startShape;
+      
+      // Center positioning for blobby shapes (width/2 and height/2)
+      const finalWidth = isDecorative ? 70 : 140;
+      const finalHeight = isDecorative ? 55 : 110;
+      const bloodPoolOffsetX = finalWidth / 2;
+      const bloodPoolOffsetY = finalHeight / 2;
+      bloodPool.style.left = (fishX - bloodPoolOffsetX) + 'px';
+      bloodPool.style.top = (fishY - bloodPoolOffsetY) + 'px';
+      
+      // Store shapes for animation
+      bloodPool.dataset.startShape = startShape;
+      bloodPool.dataset.midShape = midShape;
+      bloodPool.dataset.endShape = endShape;
+      bloodPool.dataset.isDecorative = isDecorative;
+      bloodPool.dataset.finalWidth = finalWidth;
+      bloodPool.dataset.finalHeight = finalHeight;
+      
+      document.body.appendChild(bloodPool);
+
+      // Animate the blood pool with random blob shapes
+      animateBloodPool(bloodPool);
+
+      // Create "nom nom nom" text above the shark - smaller for decorative fish
+      const nomText = document.createElement('div');
+      nomText.className = isDecorative ? 'nom-text small' : 'nom-text';
+      nomText.textContent = 'nom nom nom';
+      const nomOffset = isDecorative ? 40 : 80;
+      nomText.style.left = (state.shark.x - nomOffset) + 'px';
+      nomText.style.top = (state.shark.y - nomOffset) + 'px';
+      document.body.appendChild(nomText);
+
+      // Store reference to the fish before hiding it (important for decorative fish respawn)
+      const eatenFish = state.nearbyAnimal;
+
+      // Hide the fish with scale animation - stop animations and hide
+      eatenFish.style.animation = 'none';
+      eatenFish.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      eatenFish.style.transform = 'scale(0)';
+      eatenFish.style.opacity = '0';
+      eatenFish.classList.add('hidden');
+
+      // Bite effect at shark location
+      const biteEffect = document.createElement('div');
+      biteEffect.className = 'bite-effect';
+      biteEffect.style.left = state.shark.x + 'px';
+      biteEffect.style.top = state.shark.y + 'px';
+      document.body.appendChild(biteEffect);
+
+      // Increment score for decorative fish
+      if (isDecorative) {
+        state.score++;
+        updateScore();
+      }
+
+      // For decorative fish, respawn immediately after a brief delay
+      if (isDecorative) {
+        // Calculate new random Y position and duration
+        const waveBottom = 150;
+        const sandTop = window.innerHeight - 120;
+        const spawnAreaHeight = sandTop - waveBottom;
+        const newRandomY = waveBottom + Math.random() * spawnAreaHeight;
+        const newSwimDuration = 10000 + Math.random() * 10000;
+        eatenFish.dataset.swimDuration = newSwimDuration.toString();
+        
+        // Give it a new realistic color
+        const fishImg = eatenFish.querySelector('.fish-gif');
+        if (fishImg) {
+          const fishColor = getRealisticFishColor();
+          fishImg.style.filter = `hue-rotate(${fishColor.hue}deg) saturate(${fishColor.saturation}%) brightness(${fishColor.brightness}%)`;
+        }
+        
+        // Respawn immediately after a brief delay
+      setTimeout(() => {
+          // Verify fish is still in DOM
+          if (!eatenFish || !eatenFish.parentNode) {
+            return;
+          }
+          
+          // Cancel any running animations
+          if (eatenFish._animationId) {
+            cancelAnimationFrame(eatenFish._animationId);
+            eatenFish._animationId = null;
+          }
+          if (eatenFish._animationTimeout) {
+            clearTimeout(eatenFish._animationTimeout);
+            eatenFish._animationTimeout = null;
+          }
+          
+          // Remove only problematic classes, keep decorative-fish class
+          eatenFish.classList.remove('hidden', 'nearby', 'swimming');
+          
+          // Clear only specific inline styles that might conflict
+          eatenFish.style.removeProperty('animation');
+          eatenFish.style.removeProperty('transition');
+          
+          // Set position at edge immediately
+          eatenFish.style.left = '-100px';
+          eatenFish.style.top = newRandomY + 'px';
+          eatenFish.style.position = 'fixed';
+          eatenFish.style.zIndex = '15';
+          
+          // CRITICAL: Force visibility - use setProperty with !important to override CSS
+          eatenFish.style.setProperty('opacity', '1', 'important');
+          eatenFish.style.setProperty('transform', 'translateY(0)', 'important');
+          
+          // Start animation immediately - animateFish will handle position and animation
+          animateFish(eatenFish, newSwimDuration, true, newRandomY);
+        }, 300);
+      }
+
+      // Wait for animation to complete
+      setTimeout(() => {
+        sharkEl.classList.remove('biting');
+        biteEffect.remove();
+        nomText.remove();
+
+        // Make blood pool persistent - keep it visible for a short time
+        // The blob shape is already animated and set, just keep it visible
+        bloodPool.classList.add('persistent');
+        // Dimensions are already set by animateBloodPool, just ensure they're maintained
+        // The randomized blob shape (border-radius) is already in place
+        
+        // Remove blood pool after 2.5 seconds (total ~4.5 seconds with animation)
+        setTimeout(() => {
+          if (bloodPool.parentNode) {
+            bloodPool.remove();
+          }
+        }, 2500);
+
+        if (!isDecorative && href) {
+          // Navigate to the stored href (only for regular fish with links)
+        try {
+          window.location.href = href;
+        } catch (e) {
+          window.location.assign(href);
+        }
+        }
+      }, 2000); // Wait 2 seconds for the spread animation
+    }
+
+    // ============================================================================
+    // RANDOM BLOB SHAPE GENERATOR
+    // ============================================================================
+    function getRandomBlobShape() {
+      // Generate random border-radius values for very irregular blob shape
+      // Each corner gets random values for horizontal and vertical radii
+      // Values range from 15% to 85% for extremely uneven edges (not perfectly round)
+      const topLeft = 15 + Math.random() * 70;
+      const topRight = 15 + Math.random() * 70;
+      const bottomRight = 15 + Math.random() * 70;
+      const bottomLeft = 15 + Math.random() * 70;
+      
+      // Vertical radii (after the slash) - also very random for uneven edges
+      const topLeftY = 15 + Math.random() * 70;
+      const topRightY = 15 + Math.random() * 70;
+      const bottomRightY = 15 + Math.random() * 70;
+      const bottomLeftY = 15 + Math.random() * 70;
+      
+      // Return as CSS border-radius string
+      return `${topLeft.toFixed(1)}% ${topRight.toFixed(1)}% ${bottomRight.toFixed(1)}% ${bottomLeft.toFixed(1)}% / ${topLeftY.toFixed(1)}% ${topRightY.toFixed(1)}% ${bottomRightY.toFixed(1)}% ${bottomLeftY.toFixed(1)}%`;
+    }
+    
+    function getRandomBlobShapeMid() {
+      // Generate a mid-animation shape that's different from start
+      // More extreme values for very uneven edges
+      const topLeft = 20 + Math.random() * 65;
+      const topRight = 20 + Math.random() * 65;
+      const bottomRight = 20 + Math.random() * 65;
+      const bottomLeft = 20 + Math.random() * 65;
+      
+      const topLeftY = 20 + Math.random() * 65;
+      const topRightY = 20 + Math.random() * 65;
+      const bottomRightY = 20 + Math.random() * 65;
+      const bottomLeftY = 20 + Math.random() * 65;
+      
+      return `${topLeft.toFixed(1)}% ${topRight.toFixed(1)}% ${bottomRight.toFixed(1)}% ${bottomLeft.toFixed(1)}% / ${topLeftY.toFixed(1)}% ${topRightY.toFixed(1)}% ${bottomRightY.toFixed(1)}% ${bottomLeftY.toFixed(1)}%`;
+    }
+    
+    function getRandomBlobShapeEnd() {
+      // Generate a final shape that's different from start and mid
+      // Keep it very uneven - not perfectly round
+      const topLeft = 25 + Math.random() * 60;
+      const topRight = 25 + Math.random() * 60;
+      const bottomRight = 25 + Math.random() * 60;
+      const bottomLeft = 25 + Math.random() * 60;
+      
+      const topLeftY = 25 + Math.random() * 60;
+      const topRightY = 25 + Math.random() * 60;
+      const bottomRightY = 25 + Math.random() * 60;
+      const bottomLeftY = 25 + Math.random() * 60;
+      
+      return `${topLeft.toFixed(1)}% ${topRight.toFixed(1)}% ${bottomRight.toFixed(1)}% ${bottomLeft.toFixed(1)}% / ${topLeftY.toFixed(1)}% ${topRightY.toFixed(1)}% ${bottomRightY.toFixed(1)}% ${bottomLeftY.toFixed(1)}%`;
+    }
+    
+    function animateBloodPool(bloodPool) {
+      const startShape = bloodPool.dataset.startShape;
+      const midShape = bloodPool.dataset.midShape;
+      const endShape = bloodPool.dataset.endShape;
+      const isDecorative = bloodPool.dataset.isDecorative === 'true';
+      const finalWidth = parseFloat(bloodPool.dataset.finalWidth);
+      const finalHeight = parseFloat(bloodPool.dataset.finalHeight);
+      const duration = isDecorative ? 1800 : 2000;
+      
+      const startTime = Date.now();
+      bloodPool.style.width = '0';
+      bloodPool.style.height = '0';
+      bloodPool.style.opacity = '0';
+      bloodPool.style.borderRadius = startShape;
+      
+      function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        if (progress >= 1) {
+          // Animation complete
+          bloodPool.style.width = finalWidth + 'px';
+          bloodPool.style.height = finalHeight + 'px';
+          bloodPool.style.opacity = '0.6';
+          bloodPool.style.borderRadius = endShape;
+          return;
+        }
+        
+        // Ease-out function for smooth animation
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        
+        // Interpolate size
+        const currentWidth = finalWidth * easeOut;
+        const currentHeight = finalHeight * easeOut;
+        bloodPool.style.width = currentWidth + 'px';
+        bloodPool.style.height = currentHeight + 'px';
+        
+        // Interpolate opacity (fade in quickly, then steady)
+        if (progress < 0.2) {
+          bloodPool.style.opacity = (progress / 0.2).toString();
+        } else {
+          bloodPool.style.opacity = '0.6';
+        }
+        
+        // Morph border-radius through shapes - creates dynamic blob animation
+        if (progress < 0.3) {
+          bloodPool.style.borderRadius = startShape;
+        } else if (progress < 0.7) {
+          // Mix start and mid
+          bloodPool.style.borderRadius = midShape;
+        } else {
+          // Mix mid and end
+          bloodPool.style.borderRadius = endShape;
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+    }
+
+    // ============================================================================
+    // REALISTIC FISH COLORS
+    // ============================================================================
+    function getRealisticFishColor() {
+      // Realistic fish color palettes:
+      // Blues (180-200deg): Blue fish, damselfish
+      // Teals (160-180deg): Parrotfish, wrasse
+      // Greens (120-140deg): Green chromis, gobies
+      // Yellows (40-60deg): Yellow tang, butterflyfish
+      // Oranges (10-30deg): Clownfish, angelfish
+      // Silvers (180-220deg, low saturation): Silver fish, sardines
+      
+      const colorTypes = [
+        { hueRange: [180, 200], satRange: [70, 100], brightRange: [85, 105], name: 'blue' },      // Blue fish
+        { hueRange: [160, 180], satRange: [60, 90], brightRange: [80, 100], name: 'teal' },       // Teal/cyan
+        { hueRange: [120, 140], satRange: [50, 80], brightRange: [75, 95], name: 'green' },       // Green
+        { hueRange: [40, 60], satRange: [70, 100], brightRange: [90, 110], name: 'yellow' },      // Yellow
+        { hueRange: [10, 30], satRange: [60, 90], brightRange: [85, 105], name: 'orange' },       // Orange
+        { hueRange: [180, 220], satRange: [10, 40], brightRange: [85, 105], name: 'silver' },     // Silver
+      ];
+      
+      // Randomly select a color type
+      const colorType = colorTypes[Math.floor(Math.random() * colorTypes.length)];
+      
+      const hue = colorType.hueRange[0] + Math.random() * (colorType.hueRange[1] - colorType.hueRange[0]);
+      const saturation = colorType.satRange[0] + Math.random() * (colorType.satRange[1] - colorType.satRange[0]);
+      const brightness = colorType.brightRange[0] + Math.random() * (colorType.brightRange[1] - colorType.brightRange[0]);
+      
+      return { hue, saturation, brightness };
+    }
+
+    // ============================================================================
+    // SEA ANIMALS RENDERING
+    // ============================================================================
+    function getRandomYPosition(usedYPositions, waveBottom, spawnAreaHeight, minSpacing) {
+        let randomY;
+        let attempts = 0;
+        let validPosition = false;
+        
+        while (!validPosition && attempts < 50) {
+          randomY = waveBottom + Math.random() * spawnAreaHeight;
+          validPosition = true;
+          
+          // Check if this position is too close to any existing fish
+          for (const usedY of usedYPositions) {
+            if (Math.abs(randomY - usedY) < minSpacing) {
+              validPosition = false;
+              break;
+            }
+          }
+          
+          attempts++;
+        }
+        
+      return randomY;
+    }
+
+    function animateFish(fishElement, swimDuration = 25000, skipFadeIn = false, yPosition = null) {
+      // Cancel any existing animation on this fish to prevent multiple animations
+      if (fishElement._animationId) {
+        cancelAnimationFrame(fishElement._animationId);
+        fishElement._animationId = null;
+      }
+      if (fishElement._animationTimeout) {
+        clearTimeout(fishElement._animationTimeout);
+        fishElement._animationTimeout = null;
+      }
+      
+      // Get Y position - use provided position or generate random one
+      let randomY;
+      if (yPosition !== null) {
+        randomY = yPosition;
+      } else {
+        const waveBottom = 150;
+        const sandTop = window.innerHeight - 120;
+        const spawnAreaHeight = sandTop - waveBottom;
+        randomY = waveBottom + Math.random() * spawnAreaHeight;
+      }
+      
+      // Ensure fish is visible when it appears at the edge
+      // Remove hidden class first
+      fishElement.classList.remove('hidden');
+      // Set position
+      fishElement.style.top = randomY + 'px';
+      fishElement.style.left = '-100px';
+      // Force visibility with !important to override CSS (decorative-fish has opacity: 0)
+      // For decorative fish, we MUST use !important to override the CSS opacity: 0
+      if (fishElement.classList.contains('decorative-fish')) {
+        fishElement.style.setProperty('opacity', '1', 'important');
+      } else {
+        fishElement.style.opacity = '1';
+      }
+      fishElement.style.setProperty('transform', 'translateY(0)', 'important');
+      
+      // Only add swimming class (which triggers fade-in) if not skipping fade-in
+      // After intro, we want immediate visibility
+      if (!skipFadeIn) {
+        fishElement.classList.add('swimming');
+      }
+      
+      // Animate fish across screen
+      const startTime = Date.now();
+      const startX = -100;
+      const endX = window.innerWidth + 100;
+      let animationActive = true;
+      
+      function animate() {
+        // Check if animation should continue
+        if (!animationActive) {
+          return;
+        }
+        // Don't check for hidden class - let animation continue even if hidden is temporarily added
+        if (!fishElement.parentNode) {
+          animationActive = false;
+          return;
+        }
+        
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / swimDuration, 1);
+        
+        // Constant speed movement (no easing)
+        const currentX = startX + (endX - startX) * progress;
+        fishElement.style.left = currentX + 'px';
+        
+        // Vertical bobbing motion - combine with scale if nearby
+        const bobAmount = Math.sin(progress * Math.PI * 4) * 10;
+        const isNearby = fishElement.classList.contains('nearby');
+        const scale = isNearby ? (fishElement.classList.contains('decorative-fish') ? '1.2' : '1.15') : '1';
+        fishElement.style.transform = `translateY(${bobAmount}px) scale(${scale})`;
+        
+        if (progress < 1) {
+          fishElement._animationId = requestAnimationFrame(animate);
+        } else {
+          // Animation complete, restart with new random Y
+          animationActive = false;
+          fishElement._animationId = null;
+          fishElement.classList.remove('swimming');
+          fishElement._animationTimeout = setTimeout(() => {
+            if (fishElement.parentNode && !fishElement.classList.contains('hidden')) {
+              animateFish(fishElement, swimDuration);
+            }
+          }, 500); // Small delay before respawning
+        }
+      }
+      
+      fishElement._animationId = requestAnimationFrame(animate);
+    }
+
+    function renderSeaAnimals() {
+      seaAnimalsContainer.innerHTML = '';
+
+      // Calculate the vertical spawn area: below waves (150px) and above sand (120px from bottom)
+      const waveBottom = 150; // Waves end at 150px from top
+      const sandTop = window.innerHeight - 120; // Sand starts 120px from bottom
+      const spawnAreaHeight = sandTop - waveBottom;
+      
+      // Minimum spacing between fish to prevent collisions
+      const minSpacing = 80; // Minimum vertical distance between fish
+      const usedYPositions = [];
+
+      state.filteredPages.forEach((page, index) => {
+        const animal = document.createElement('div');
+        animal.className = 'sea-animal';
+        animal.dataset.href = page.href;
+        animal.dataset.index = index;
+
+        // Find a unique Y position that doesn't collide with other fish
+        const randomY = getRandomYPosition(usedYPositions, waveBottom, spawnAreaHeight, minSpacing);
+        usedYPositions.push(randomY);
+        
+        animal.style.top = randomY + 'px';
+        animal.style.left = '-100px'; // Start off-screen left
+
+        // Calculate animation delay based on index for staggered swimming
+        const animationDelay = index * 2000; // 2 seconds between each fish
+        
+        // Apply realistic fish colors
+        const fishColor = getRealisticFishColor();
+        
+        animal.innerHTML = `
+          <div class="fish">
+            <img src="./assets/images/seal.gif" class="fish-gif active" alt="Seal" style="filter: hue-rotate(${fishColor.hue}deg) saturate(${fishColor.saturation}%) brightness(${fishColor.brightness}%);">
+            <div class="fish-label">${page.title}</div>
+          </div>
+        `;
+
+        seaAnimalsContainer.appendChild(animal);
+        
+        // Start animation after delay - slower for big fish
+        setTimeout(() => {
+          animateFish(animal, 25000); // 25 seconds instead of 15
+        }, animationDelay);
+      });
+    }
+
+    // ============================================================================
+    // INTRO ANIMATION
+    // ============================================================================
+    async function playIntroAnimation() {
+      introOverlay.classList.add('active');
+      instructions.style.opacity = '0';
+
+      state.shark.x = -100;
+      state.shark.y = window.innerHeight / 2;
+      updateSharkPosition();
+
+      await animateSharkTo(window.innerWidth / 2, window.innerHeight / 2, 1000);
+
+      const loopCenterX = window.innerWidth / 2;
+      const loopCenterY = window.innerHeight / 2;
+      const loopRadius = 100;
+
+      for (let i = 0; i <= 360; i += 10) {
+        const rad = (i * Math.PI) / 180;
+        const x = loopCenterX + Math.cos(rad) * loopRadius;
+        const y = loopCenterY + Math.sin(rad) * loopRadius;
+        const nextRad = ((i + 10) * Math.PI) / 180;
+        const nextX = loopCenterX + Math.cos(nextRad) * loopRadius;
+        const nextY = loopCenterY + Math.sin(nextRad) * loopRadius;
+        
+        const prevX = state.shark.x;
+        const prevY = state.shark.y;
+        
+        state.shark.x = x;
+        state.shark.y = y;
+        
+        // Calculate movement direction
+        const dx = nextX - x;
+        const dy = nextY - y;
+        
+        // Update velocity for GIF switching
+        state.shark.vx = dx * 0.1;
+        state.shark.vy = dy * 0.1;
+        state.shark.facing = dx < 0 ? 'left' : 'right';
+        state.shark.isMoving = true;
+        
+        // Update position manually for intro
+        const sharkWidth = 240;
+        const sharkHeight = 90;
+        sharkEl.style.left = (state.shark.x - sharkWidth / 2) + 'px';
+        sharkEl.style.top = (state.shark.y - sharkHeight / 2) + 'px';
+        
+        // Update GIF based on horizontal movement direction
+        updateSharkGif();
+        
+        // Calculate rotation angle based on movement direction
+        let rotationAngle = 0;
+        if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+          // Calculate angle from vertical movement (up/down)
+          rotationAngle = Math.atan2(dy, Math.abs(dx)) * (180 / Math.PI);
+          rotationAngle = Math.max(-90, Math.min(90, rotationAngle));
+          
+          // If using sharkleft.gif (head on left), invert rotation
+          if (dx < 0) {
+            rotationAngle = -rotationAngle;
+          }
+        }
+        
+        sharkEl.style.transform = `rotate(${rotationAngle}deg)`;
+        sharkEl.classList.toggle('facing-left', state.shark.facing === 'left');
+        sharkEl.classList.toggle('facing-right', state.shark.facing === 'right');
+        sharkEl.classList.toggle('moving', true);
+        
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+
+      const firstAnimal = document.querySelector('.sea-animal');
+      if (firstAnimal) {
+        const rect = firstAnimal.getBoundingClientRect();
+        const targetX = rect.left + rect.width / 2;
+        const targetY = rect.top + rect.height / 2;
+
+        await animateSharkTo(targetX, targetY, 800);
+        
+        // Create blood pool at fish location (random blobby shape, wider than tall)
+        const fishX = targetX;
+        const fishY = targetY;
+        const bloodPool = document.createElement('div');
+        bloodPool.className = 'blood-pool';
+        
+        // Generate random blob shapes for animation
+        const startShape = getRandomBlobShape();
+        const midShape = getRandomBlobShapeMid();
+        const endShape = getRandomBlobShapeEnd();
+        
+        // Set initial border-radius
+        bloodPool.style.borderRadius = startShape;
+        
+        const finalWidth = 140;
+        const finalHeight = 110;
+        bloodPool.style.left = (fishX - finalWidth / 2) + 'px';
+        bloodPool.style.top = (fishY - finalHeight / 2) + 'px';
+        
+        // Store shapes for animation
+        bloodPool.dataset.startShape = startShape;
+        bloodPool.dataset.midShape = midShape;
+        bloodPool.dataset.endShape = endShape;
+        bloodPool.dataset.isDecorative = 'false';
+        bloodPool.dataset.finalWidth = finalWidth;
+        bloodPool.dataset.finalHeight = finalHeight;
+        
+        document.body.appendChild(bloodPool);
+        
+        // Animate the blood pool with random blob shapes
+        animateBloodPool(bloodPool);
+
+        // Create "nom nom nom" text above the shark
+        const nomText = document.createElement('div');
+        nomText.className = 'nom-text';
+        nomText.textContent = 'nom nom nom';
+        nomText.style.left = (state.shark.x - 80) + 'px';
+        nomText.style.top = (state.shark.y - 80) + 'px';
+        document.body.appendChild(nomText);
+        
+        sharkEl.classList.add('biting');
+        
+        // Calculate new position at edge
+        const waveBottom = 150;
+        const sandTop = window.innerHeight - 120;
+        const spawnAreaHeight = sandTop - waveBottom;
+        const randomY = waveBottom + Math.random() * spawnAreaHeight;
+        
+        // Instantly stop all animations and move fish to edge
+        firstAnimal.style.animation = 'none';
+        firstAnimal.style.transition = 'none';
+        firstAnimal.style.opacity = '1';
+        firstAnimal.style.transform = 'translateY(0) scale(1)';
+        firstAnimal.style.left = '-100px';
+        firstAnimal.style.top = randomY + 'px';
+        firstAnimal.style.position = 'fixed';
+        firstAnimal.style.zIndex = '20';
+        firstAnimal.classList.remove('hidden');
+        
+        // Start swimming animation immediately at the edge using animateFish to prevent conflicts
+        const swimDuration = 25000;
+        animateFish(firstAnimal, swimDuration, true);
+        
+        // Wait for animation, then clean up
+        setTimeout(() => {
+          sharkEl.classList.remove('biting');
+          bloodPool.remove();
+          nomText.remove();
+        }, 1500);
+        
+        // Wait for blood animation to complete
+        await new Promise(resolve => setTimeout(resolve, 1500));
+      }
+
+      await animateSharkTo(window.innerWidth / 2, window.innerHeight / 2, 1000);
+
+      state.introComplete = true;
+      introOverlay.classList.remove('active');
+      instructions.style.opacity = '0.8';
+    }
+
+    function animateSharkTo(targetX, targetY, duration) {
+      return new Promise(resolve => {
+        const startX = state.shark.x;
+        const startY = state.shark.y;
+        const dx = targetX - startX;
+        const dy = targetY - startY;
+        const startTime = Date.now();
+
+        function animate() {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+          const prevX = state.shark.x;
+          const prevY = state.shark.y;
+          
+          state.shark.x = startX + dx * ease;
+          state.shark.y = startY + dy * ease;
+          
+          // Calculate velocity for GIF switching and rotation
+          const currentDx = state.shark.x - prevX;
+          const currentDy = state.shark.y - prevY;
+          
+          // Update velocity and facing direction
+          state.shark.vx = currentDx;
+          state.shark.vy = currentDy;
+          if (dx < 0) {
+            state.shark.facing = 'left';
+          } else if (dx > 0) {
+            state.shark.facing = 'right';
+          }
+          state.shark.isMoving = Math.abs(currentDx) > 0.1 || Math.abs(currentDy) > 0.1;
+          
+          // Update position manually for intro
+          const sharkWidth = 240;
+          const sharkHeight = 90;
+          sharkEl.style.left = (state.shark.x - sharkWidth / 2) + 'px';
+          sharkEl.style.top = (state.shark.y - sharkHeight / 2) + 'px';
+          
+          // Update GIF based on horizontal movement direction
+          updateSharkGif();
+          
+          // Calculate rotation angle based on movement direction
+          let rotationAngle = 0;
+          if (state.shark.isMoving) {
+            // Calculate angle from vertical movement (up/down)
+            rotationAngle = Math.atan2(currentDy, Math.abs(currentDx)) * (180 / Math.PI);
+            rotationAngle = Math.max(-90, Math.min(90, rotationAngle));
+            
+            // If using sharkleft.gif (head on left), invert rotation
+            if (currentDx < 0 || state.shark.facing === 'left') {
+              rotationAngle = -rotationAngle;
+            }
+          }
+          
+          sharkEl.style.transform = `rotate(${rotationAngle}deg)`;
+          sharkEl.classList.toggle('facing-left', state.shark.facing === 'left');
+          sharkEl.classList.toggle('facing-right', state.shark.facing === 'right');
+          sharkEl.classList.toggle('moving', state.shark.isMoving);
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            state.shark.isMoving = false;
+            resolve();
+          }
+        }
+
+        animate();
+      });
+    }
+
+    // ============================================================================
+    // SEARCH FUNCTIONALITY
+    // ============================================================================
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim().toLowerCase();
+      if (!query) {
+        state.filteredPages = pages;
+      } else {
+        state.filteredPages = pages.filter(page =>
+          page.title.toLowerCase().includes(query) ||
+          (page.badge && page.badge.toLowerCase().includes(query)) ||
+          (page.description && page.description.toLowerCase().includes(query))
+        );
+      }
+      renderSeaAnimals();
+    });
+
+    // ============================================================================
+    // GAME LOOP
+    // ============================================================================
+    let lastFrameTime = 0;
+    const targetFPS = 60;
+    const frameInterval = 1000 / targetFPS;
+
+    function gameLoop(currentTime) {
+      if (currentTime - lastFrameTime >= frameInterval) {
+        if (state.introComplete) {
+          updateSharkPosition();
+          checkProximity();
+        }
+        lastFrameTime = currentTime;
+      }
+      requestAnimationFrame(gameLoop);
+    }
+
+    // ============================================================================
+    // DRIFTING PARTICLES - OCEAN CURRENT
+    // ============================================================================
+    function createParticles() {
+      if (!oceanParticles) return;
+      
+      const particleCount = 50;
+      const oceanHeight = window.innerHeight - 150;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random size
+        const size = Math.random();
+        if (size < 0.4) {
+          particle.classList.add('small');
+        } else if (size < 0.7) {
+          particle.classList.add('medium');
+        } else {
+          particle.classList.add('large');
+        }
+        
+        // Random vertical position (within ocean area)
+        const top = 150 + Math.random() * oceanHeight;
+        particle.style.top = top + 'px';
+        
+        // Random animation duration (8-20 seconds for variety)
+        const duration = 8 + Math.random() * 12;
+        particle.style.animationDuration = duration + 's';
+        
+        // Random delay so particles don't all start at once
+        const delay = Math.random() * duration;
+        particle.style.animationDelay = '-' + delay + 's';
+        
+        // Slight vertical drift variation
+        const verticalDrift = (Math.random() - 0.5) * 30;
+        particle.style.setProperty('--drift-y', verticalDrift + 'px');
+        
+        oceanParticles.appendChild(particle);
+      }
+    }
+
+    // ============================================================================
+    // OCEAN CURRENTS - VISIBLE STREAMS
+    // ============================================================================
+    function createCurrents() {
+      if (!oceanCurrents) return;
+      
+      const currentCount = 8;
+      const oceanHeight = window.innerHeight - 150;
+      
+      for (let i = 0; i < currentCount; i++) {
+        const current = document.createElement('div');
+        current.className = 'current-stream';
+        
+        // Random vertical position
+        const top = 150 + Math.random() * oceanHeight;
+        current.style.top = top + 'px';
+        
+        // Random animation duration (10-18 seconds)
+        const duration = 10 + Math.random() * 8;
+        current.style.animationDuration = duration + 's';
+        
+        // Random delay
+        const delay = Math.random() * duration;
+        current.style.animationDelay = '-' + delay + 's';
+        
+        oceanCurrents.appendChild(current);
+      }
+    }
+
+    // ============================================================================
+    // WATER WAVE TRAIL EFFECT
+    // ============================================================================
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+    let trailTimer = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      const currentTime = Date.now();
+      
+      // Only create waves when mouse is moving (not stationary)
+      const distance = Math.sqrt(
+        Math.pow(e.clientX - lastMouseX, 2) + 
+        Math.pow(e.clientY - lastMouseY, 2)
+      );
+      
+      // Create wave trail every 50ms and when mouse moves at least 5px
+      if (currentTime - trailTimer > 50 && distance > 5) {
+        createWaveTrail(e.clientX, e.clientY);
+        trailTimer = currentTime;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+      }
+    });
+
+    function createWaveTrail(x, y) {
+      if (!waveTrailContainer) return;
+      
+      const wave = document.createElement('div');
+      wave.className = 'wave-trail';
+      wave.style.left = x + 'px';
+      wave.style.top = y + 'px';
+      
+      waveTrailContainer.appendChild(wave);
+      
+      // Remove wave after animation completes
+      setTimeout(() => {
+        if (wave.parentNode) {
+          wave.parentNode.removeChild(wave);
+        }
+      }, 1000);
+    }
+
+    function createSharkTrail(x, y) {
+      if (!sharkTrailContainer) return;
+
+      const trail = document.createElement('div');
+      trail.className = 'shark-trail';
+      trail.style.left = x + 'px';
+      trail.style.top = y + 'px';
+
+      sharkTrailContainer.appendChild(trail);
+
+      setTimeout(() => {
+        if (trail.parentNode === sharkTrailContainer) {
+          sharkTrailContainer.removeChild(trail);
+        }
+      }, 1500);
+    }
+
+    // ============================================================================
+    // SAND DUST PLUMES
+    // ============================================================================
+    function createSandPlumes() {
+      if (!sandPlumes) return;
+      
+      const plumeCount = 6;
+      
+      for (let i = 0; i < plumeCount; i++) {
+        const plume = document.createElement('div');
+        plume.className = 'sand-plume';
+        
+        // Random vertical position near the ocean floor (0-180px from bottom)
+        const bottom = 20 + Math.random() * 160;
+        plume.style.bottom = bottom + 'px';
+        
+        // Random animation duration (12-20 seconds)
+        const duration = 12 + Math.random() * 8;
+        plume.style.animationDuration = duration + 's';
+        
+        // Random delay
+        const delay = Math.random() * duration;
+        plume.style.animationDelay = '-' + delay + 's';
+        
+        sandPlumes.appendChild(plume);
+      }
+    }
+
+    // ============================================================================
+    // DECORATIVE FISH (Small fish for fun eating)
+    // ============================================================================
+    function createDecorativeFish() {
+      const decorativeFishContainer = document.getElementById('decorative-fish-container') || seaAnimalsContainer;
+      const waveBottom = 150;
+      const sandTop = window.innerHeight - 120;
+      const spawnAreaHeight = sandTop - waveBottom;
+      
+      // Create 15-20 decorative fish (more little fish)
+      const fishCount = 15 + Math.floor(Math.random() * 6);
+      
+      for (let i = 0; i < fishCount; i++) {
+        const decorativeFish = document.createElement('div');
+        decorativeFish.className = 'decorative-fish';
+        
+        // Random Y position
+        const randomY = waveBottom + Math.random() * spawnAreaHeight;
+        decorativeFish.style.top = randomY + 'px';
+        decorativeFish.style.left = '-100px';
+        
+        // Random swim duration (10-20 seconds for variety)
+        const swimDuration = 10000 + Math.random() * 10000;
+        
+        // Store swim duration for respawning
+        decorativeFish.dataset.swimDuration = swimDuration.toString();
+        
+        // Apply realistic fish colors to decorative fish
+        const fishColor = getRealisticFishColor();
+        
+        decorativeFish.innerHTML = `
+          <div class="fish">
+            <img src="./assets/images/fish.gif" class="fish-gif active" alt="Small Fish" style="filter: hue-rotate(${fishColor.hue}deg) saturate(${fishColor.saturation}%) brightness(${fishColor.brightness}%);">
+          </div>
+        `;
+        
+        decorativeFishContainer.appendChild(decorativeFish);
+        
+        // Start animation with random delay
+        const delay = Math.random() * 5000;
+        setTimeout(() => {
+          animateFish(decorativeFish, swimDuration);
+        }, delay);
+      }
+    }
+
+    // ============================================================================
+    // INITIALIZATION
+    // ============================================================================
+    function init() {
+      state.shark.x = window.innerWidth / 2;
+      state.shark.y = window.innerHeight / 2;
+      updateSharkPosition();
+      updateSharkGif(); // Set initial GIF
+
+      generateBackgroundDetails();
+      createParticles();
+      createCurrents();
+      createSandPlumes();
+      renderSeaAnimals();
+      createDecorativeFish();
+
+      requestAnimationFrame(gameLoop);
+
+      setTimeout(() => {
+        playIntroAnimation();
+      }, 500);
+
+      // Debounce resize handler for better performance
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+        renderSeaAnimals();
+        }, 250);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
+ 
