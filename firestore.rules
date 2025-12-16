@@ -15,6 +15,30 @@ service cloud.firestore {
     match /packClients/{document=**} {
       allow read, write: if true;
     }
+    
+    // Typing trainer: user scores
+    match /typingScores/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Typing trainer: user test history
+    match /userTests/{testId} {
+      // Allow read access to all test results (for leaderboard)
+      allow read: if true;
+      // Allow create if authenticated and userId matches
+      allow create: if request.auth != null && 
+                      request.resource.data.userId == request.auth.uid;
+      // Allow update/delete if authenticated and document belongs to user
+      allow update, delete: if request.auth != null && 
+                              resource.data.userId == request.auth.uid;
+    }
+    
+    // Typing trainer: global leaderboard (best score per user)
+    match /globalLeaderboard/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
   }
 }
 

@@ -1182,10 +1182,12 @@
       height: 100%;
       z-index: 200;
       pointer-events: none;
+      background: transparent;
     }
 
     .intro-overlay.active {
       pointer-events: all;
+      background: transparent; /* No dark overlay, just block interactions */
     }
 
     /* Responsive */
@@ -1315,6 +1317,7 @@
   <div class="intro-overlay" id="intro-overlay"></div>
 
   <script>
+    console.log('Script starting...');
     // ============================================================================
     // PAGE CONFIGURATION
     // ============================================================================
@@ -1339,6 +1342,15 @@
         description: "Open 10 packs and compute costs & profits.",
         x: 30,
         y: 40
+      },
+      {
+        title: "Typing Trainer",
+        href: "./typing-trainer.html",
+        badge: "Typing",
+        icon: "🔤",
+        description: "Practice typing speed and accuracy. Compete on the leaderboard!",
+        x: 50,
+        y: 50
       },
       {
         title: "My Github",
@@ -2623,23 +2635,29 @@
     // INITIALIZATION
     // ============================================================================
     function init() {
-      state.shark.x = window.innerWidth / 2;
-      state.shark.y = window.innerHeight / 2;
-      updateSharkPosition();
-      updateSharkGif(); // Set initial GIF
+      console.log('init() called');
+      try {
+        state.shark.x = window.innerWidth / 2;
+        state.shark.y = window.innerHeight / 2;
+        updateSharkPosition();
+        updateSharkGif(); // Set initial GIF
 
-      generateBackgroundDetails();
-      createParticles();
-      createCurrents();
-      createSandPlumes();
-      renderSeaAnimals();
-      createDecorativeFish();
+        generateBackgroundDetails();
+        createParticles();
+        createCurrents();
+        createSandPlumes();
+        renderSeaAnimals();
+        createDecorativeFish();
 
-      requestAnimationFrame(gameLoop);
+        requestAnimationFrame(gameLoop);
 
-      setTimeout(() => {
-        playIntroAnimation();
-      }, 500);
+        setTimeout(() => {
+          playIntroAnimation();
+        }, 500);
+        console.log('init() completed successfully');
+      } catch (error) {
+        console.error('Error in init():', error);
+      }
 
       // Debounce resize handler for better performance
       let resizeTimeout;
@@ -2651,11 +2669,18 @@
       });
     }
 
+    console.log('Setting up init...');
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
+      console.log('Waiting for DOMContentLoaded...');
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOMContentLoaded fired, calling init');
+        init();
+      });
     } else {
+      console.log('DOM already loaded, calling init immediately');
       init();
     }
+    console.log('Script loaded');
   </script>
 </body>
 </html>

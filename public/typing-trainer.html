@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brainrot Typing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .auth-section {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #e0e0e0;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #252525;
+      border-color: #444;
+    }
+
+    .btn-primary {
+      background: #0066cc;
+      border-color: #0066cc;
+    }
+
+    .btn-primary:hover {
+      background: #0052a3;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #e0e0e0;
+    }
+
+    .score-display {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #1a1a1a;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+
+    .score-display.hidden {
+      display: none;
+    }
+
+    .score-value {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: #0066cc;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 1rem;
+      color: #888;
+      margin-top: 5px;
+    }
+
+    .typing-area {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .text-display {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      min-height: 100px;
+      color: #ccc;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .char-correct {
+      color: #4caf50;
+      background: rgba(76, 175, 80, 0.1);
+    }
+
+    .char-incorrect {
+      color: #f44336;
+      background: rgba(244, 67, 54, 0.1);
+      text-decoration: underline;
+    }
+
+    .char-current {
+      background: #333;
+      color: #fff;
+      border-left: 2px solid #0066cc;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.3; }
+    }
+
+    .input-area {
+      width: 100%;
+      padding: 12px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #e0e0e0;
+      font-size: 1.1rem;
+      font-family: inherit;
+      resize: none;
+      min-height: 60px;
+    }
+
+    .input-area:focus {
+      outline: none;
+      border-color: #0066cc;
+    }
+
+    .input-area:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .results-inline {
+      text-align: center;
+      padding: 15px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .results-inline.hidden {
+      display: none;
+    }
+
+    .results-inline h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .results-inline .result-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .result-stat {
+      text-align: center;
+    }
+
+    .result-stat-label {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 5px;
+    }
+
+    .result-stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #e0e0e0;
+    }
+
+    .leaderboard-section {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .leaderboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .leaderboard-header h3 {
+      font-size: 1.1rem;
+    }
+
+    .leaderboard-toggle {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-buttons.hidden {
+      display: none;
+    }
+
+    .btn-small {
+      padding: 4px 10px;
+      font-size: 0.8rem;
+    }
+
+    .filter-btn.active {
+      background: #0066cc;
+      border-color: #0066cc;
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    .leaderboard-table th {
+      color: #888;
+      font-weight: 600;
+    }
+
+    .leaderboard-table tr:hover {
+      background: #252525;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .modal-content form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .modal-content input {
+      padding: 10px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #e0e0e0;
+      font-size: 1rem;
+    }
+
+    .modal-content input:focus {
+      outline: none;
+      border-color: #0066cc;
+    }
+
+    .modal-content .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-content .btn-group button {
+      flex: 1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #0066cc;
+      transition: width 0.1s;
+      width: 0%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Brainrot Typing</h1>
+      <div class="auth-section">
+        <span id="user-info" class="hidden"></span>
+        <button id="auth-btn" class="btn">Sign In</button>
+      </div>
+    </header>
+
+    <!-- Score Display -->
+    <div id="current-score-display" class="score-display hidden">
+      <div class="score-value" id="score-value">0</div>
+      <div class="score-label">Score</div>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat">
+        <div class="stat-label">WPM</div>
+        <div class="stat-value" id="wpm-display">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Accuracy</div>
+        <div class="stat-value" id="accuracy-display">100</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Time</div>
+        <div class="stat-value" id="timer-display">0:00</div>
+      </div>
+    </div>
+
+    <div class="typing-area">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="text-display" id="text-display"></div>
+      <textarea 
+        class="input-area" 
+        id="input-area" 
+        placeholder="Start typing..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      ></textarea>
+    </div>
+
+    <div class="controls">
+      <button id="action-btn" class="btn btn-primary">Start</button>
+    </div>
+
+    <div id="results-inline" class="results-inline hidden">
+      <h3>Test Complete!</h3>
+      <div class="result-stats">
+        <div class="result-stat">
+          <div class="result-stat-label">WPM</div>
+          <div class="result-stat-value" id="final-wpm">0</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">Accuracy</div>
+          <div class="result-stat-value" id="final-accuracy">0%</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">Time</div>
+          <div class="result-stat-value" id="final-time">0:00</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">Score</div>
+          <div class="result-stat-value" id="final-score">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="leaderboard-section">
+      <div class="leaderboard-header">
+        <h3>Leaderboard</h3>
+        <button id="leaderboard-toggle" class="btn btn-small leaderboard-toggle">Expand</button>
+      </div>
+      <div id="filter-buttons-container" class="filter-buttons hidden">
+        <button class="filter-btn btn btn-small active" data-filter="all">All Time</button>
+        <button class="filter-btn btn btn-small" data-filter="month">Month</button>
+        <button class="filter-btn btn btn-small" data-filter="week">Week</button>
+        <button class="filter-btn btn btn-small" data-filter="day">Today</button>
+      </div>
+      
+      <div id="leaderboard-content" style="display: none; margin-top: 10px;">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Best Score</th>
+              <th>WPM</th>
+              <th>Acc</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 10px;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+        <div id="user-rank-info" class="hidden" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--hw-border); font-size: 0.85rem;"></div>
+      </div>
+    </div>
+
+    <div class="leaderboard-section" style="margin-top: 20px;">
+      <div class="leaderboard-header">
+        <h3>Individual Test Results</h3>
+        <button id="individual-leaderboard-toggle" class="btn btn-small leaderboard-toggle">Expand</button>
+      </div>
+      
+      <div id="individual-leaderboard-content" style="display: none; margin-top: 10px;">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Score</th>
+              <th>WPM</th>
+              <th>Acc</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="individual-leaderboard-body">
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 10px;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal">
+    <div class="modal-content">
+      <h2 id="auth-modal-title">Sign In</h2>
+      <form id="auth-form">
+        <input type="email" id="auth-email" placeholder="Email" required>
+        <input type="password" id="auth-password" placeholder="Password" required>
+        <input type="text" id="auth-username" placeholder="Username (for sign up)" class="hidden">
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary" id="auth-submit-btn">Sign In</button>
+          <button type="button" class="btn" id="auth-switch-btn">Switch to Sign Up</button>
+        </div>
+        <button type="button" class="btn" id="auth-close-btn">Close</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="./firebase-config.js"></script>
+  <script src="./assets/js/typing-sentences.js"></script>
+
+  <script>
+
+    // State
+    let state = {
+      testStatus: 'idle', // 'idle', 'active', 'completed'
+      currentText: '',
+      userInput: '',
+      startTime: null,
+      mistakes: 0,
+      correctChars: 0,
+      totalChars: 0,
+      timerInterval: null,
+      user: null,
+      firebaseDb: null,
+      firebaseAuth: null,
+      leaderboardFilter: 'all',
+      scoreDisplayInterval: null
+    };
+
+    // DOM elements
+    const textDisplay = document.getElementById('text-display');
+    const inputArea = document.getElementById('input-area');
+    const actionBtn = document.getElementById('action-btn');
+    const wpmDisplay = document.getElementById('wpm-display');
+    const accuracyDisplay = document.getElementById('accuracy-display');
+    const timerDisplay = document.getElementById('timer-display');
+    const resultsInline = document.getElementById('results-inline');
+    const progressFill = document.getElementById('progress-fill');
+    const scoreDisplay = document.getElementById('current-score-display');
+    const scoreValueDisplay = document.getElementById('score-value');
+
+    // Pick random text
+    function pickRandomText() {
+      const randomIndex = Math.floor(Math.random() * TYPING_TEXTS.length);
+      state.currentText = TYPING_TEXTS[randomIndex];
+      state.userInput = '';
+      renderText();
+    }
+
+    // Render text with highlighting
+    function renderText() {
+      let html = '';
+      const input = state.userInput;
+      const text = state.currentText;
+
+      for (let i = 0; i < text.length; i++) {
+        let charClass = '';
+        if (i < input.length) {
+          charClass = input[i] === text[i] ? 'char-correct' : 'char-incorrect';
+        } else if (i === input.length) {
+          charClass = 'char-current';
+        }
+        html += `<span class="${charClass}">${text[i] === ' ' ? '&nbsp;' : text[i]}</span>`;
+      }
+
+      textDisplay.innerHTML = html;
+
+      // Update progress
+      const progress = (input.length / text.length) * 100;
+      progressFill.style.width = `${Math.min(progress, 100)}%`;
+    }
+
+    // Calculate WPM
+    function calculateWPM() {
+      if (!state.startTime || state.totalChars === 0) return 0;
+      const elapsed = (Date.now() - state.startTime) / 1000 / 60; // minutes
+      const wpm = Math.round((state.correctChars / 5) / elapsed);
+      return isNaN(wpm) ? 0 : wpm;
+    }
+
+    // Calculate accuracy
+    function calculateAccuracy() {
+      if (state.totalChars === 0) return 100;
+      const accuracy = Math.round((state.correctChars / state.totalChars) * 100);
+      return isNaN(accuracy) ? 100 : accuracy;
+    }
+
+    // Calculate score (WPM weighted by accuracy)
+    function calculateScore(wpm, accuracy) {
+      return Math.round(wpm * (accuracy / 100));
+    }
+
+    // Update stats
+    function updateStats() {
+      const wpm = calculateWPM();
+      const accuracy = calculateAccuracy();
+      const score = calculateScore(wpm, accuracy);
+      
+      wpmDisplay.textContent = wpm;
+      accuracyDisplay.textContent = accuracy;
+      scoreValueDisplay.textContent = score;
+    }
+
+    // Complete test
+    function completeTest(finalWPM, finalAccuracy, finalScore) {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+      
+      state.testStatus = 'completed';
+      inputArea.disabled = true;
+      
+      // Use the passed values (from display) to ensure consistency
+      const elapsed = Date.now() - state.startTime;
+      const minutes = Math.floor(elapsed / 60000);
+      const seconds = Math.floor((elapsed % 60000) / 1000);
+      
+      // Update results panel with the same values
+      document.getElementById('final-wpm').textContent = finalWPM;
+      document.getElementById('final-accuracy').textContent = finalAccuracy;
+      document.getElementById('final-time').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      
+      resultsInline.classList.remove('hidden');
+      actionBtn.textContent = 'New Test';
+      
+      // Save results using the exact values that were displayed
+      saveResults(finalWPM, finalAccuracy, finalScore);
+    }
+
+    // Save results
+    function saveResults(wpm, accuracy, score) {
+      if (state.user) {
+        saveToFirestore(wpm, accuracy, score);
+      } else {
+        saveToLocalStorage(wpm, accuracy, score);
+      }
+    }
+
+    // Save to Firestore
+    async function saveToFirestore(wpm, accuracy, score) {
+      if (!state.firebaseDb || !state.user) return;
+
+      try {
+        const userId = state.user.uid;
+        const username = state.user.displayName || state.user.email.split('@')[0];
+        const now = new Date();
+
+        // Save individual test result
+        await state.firebaseDb.collection('userTests').add({
+          userId: userId,
+          username: username,
+          wpm: wpm,
+          accuracy: accuracy,
+          score: score,
+          testDate: now
+        });
+
+        // Update user's best score in globalLeaderboard
+        const globalLeaderboardRef = state.firebaseDb.collection('globalLeaderboard').doc(userId);
+        const globalLeaderboardDoc = await globalLeaderboardRef.get();
+        
+        if (globalLeaderboardDoc.exists) {
+          const data = globalLeaderboardDoc.data();
+          if (score > (data.bestScore || 0)) {
+            await globalLeaderboardRef.set({
+              userId: userId,
+              username: username,
+              bestWPM: wpm,
+              bestAccuracy: accuracy,
+              bestScore: score,
+              lastTestDate: now
+            }, { merge: true });
+          }
+        } else {
+          await globalLeaderboardRef.set({
+            userId: userId,
+            username: username,
+            bestWPM: wpm,
+            bestAccuracy: accuracy,
+            bestScore: score,
+            lastTestDate: now
+          });
+        }
+
+        // Reload leaderboards
+        if (document.getElementById('leaderboard-content').style.display !== 'none') {
+          loadLeaderboard();
+        }
+        if (document.getElementById('individual-leaderboard-content').style.display !== 'none') {
+          loadIndividualLeaderboard();
+        }
+      } catch (error) {
+        console.error('Error saving to Firestore:', error);
+      }
+    }
+
+    // Save to local storage
+    function saveToLocalStorage(wpm, accuracy, score) {
+      const history = JSON.parse(localStorage.getItem('typingHistory') || '[]');
+      history.push({
+        wpm,
+        accuracy,
+        score,
+        date: new Date().toISOString()
+      });
+      localStorage.setItem('typingHistory', JSON.stringify(history));
+    }
+
+    // Start test
+    function startTest() {
+      if (state.testStatus === 'active') return;
+      
+      state.testStatus = 'active';
+      state.startTime = null; // Will be set on first keypress
+      state.mistakes = 0;
+      state.correctChars = 0;
+      state.totalChars = 0;
+      inputArea.disabled = false;
+      inputArea.value = '';
+      inputArea.focus();
+      resultsInline.classList.add('hidden');
+      actionBtn.textContent = 'Reset';
+      scoreDisplay.classList.remove('hidden');
+      
+      pickRandomText();
+      updateStats();
+    }
+
+    // Reset test
+    function resetTest() {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+      
+      state.testStatus = 'idle';
+      state.startTime = null;
+      state.userInput = '';
+      state.mistakes = 0;
+      state.correctChars = 0;
+      state.totalChars = 0;
+      inputArea.value = '';
+      inputArea.disabled = true;
+      
+      timerDisplay.textContent = '0:00';
+      wpmDisplay.textContent = '0';
+      accuracyDisplay.textContent = '100';
+      scoreValueDisplay.textContent = '0';
+      progressFill.style.width = '0%';
+      scoreDisplay.classList.add('hidden');
+      
+      // Auto-start after a brief delay (startTest will pick new random text)
+      setTimeout(() => {
+        startTest();
+      }, 300);
+    }
+
+    // Start timer
+    function startTimer() {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+      }
+      
+      state.timerInterval = setInterval(() => {
+        if (!state.startTime) return;
+        
+        const elapsed = Date.now() - state.startTime;
+        const minutes = Math.floor(elapsed / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        updateStats();
+      }, 100);
+    }
+
+    // Handle input
+    inputArea.addEventListener('input', (e) => {
+      if (state.testStatus !== 'active') return;
+
+      const input = e.target.value;
+
+      // Start timer on first keypress
+      if (!state.startTime && input.length > 0) {
+        state.startTime = Date.now();
+        startTimer();
+      }
+
+      // Check if user completed the text
+      if (input.length >= state.currentText.length) {
+        state.userInput = input.substring(0, state.currentText.length);
+        // Update stats one final time before completing
+        updateStats();
+        // Get the final values from the display (to ensure consistency)
+        const finalWPM = parseInt(wpmDisplay.textContent) || 0;
+        const finalAccuracy = parseInt(accuracyDisplay.textContent) || 100;
+        const finalScore = parseInt(scoreValueDisplay.textContent) || 0;
+        completeTest(finalWPM, finalAccuracy, finalScore);
+        return;
+      }
+      
+      state.userInput = input;
+      
+      // Calculate mistakes and correct chars
+      state.mistakes = 0;
+      state.correctChars = 0;
+      state.totalChars = state.userInput.length;
+      
+      for (let i = 0; i < state.userInput.length; i++) {
+        if (state.userInput[i] === state.currentText[i]) {
+          state.correctChars++;
+        } else {
+          state.mistakes++;
+        }
+      }
+      
+      renderText();
+      updateStats();
+    });
+
+    // Prevent copy/paste
+    inputArea.addEventListener('paste', (e) => {
+      e.preventDefault();
+    });
+    inputArea.addEventListener('copy', (e) => {
+      e.preventDefault();
+    });
+    inputArea.addEventListener('cut', (e) => {
+      e.preventDefault();
+    });
+    inputArea.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+
+    // Action button
+    actionBtn.addEventListener('click', handleAction);
+
+    function handleAction() {
+      if (state.testStatus === 'idle' || state.testStatus === 'completed') {
+        startTest();
+      } else if (state.testStatus === 'active') {
+        resetTest();
+      }
+    }
+
+    // Enter key handler
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        const activeElement = document.activeElement;
+        const isInputFocused = activeElement === inputArea || activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA';
+        const isModalOpen = document.getElementById('auth-modal').classList.contains('active');
+        
+        if (!isInputFocused && !isModalOpen) {
+          e.preventDefault();
+          handleAction();
+        } else if (isInputFocused && state.testStatus === 'active') {
+          // Allow Enter to reset while typing
+          e.preventDefault();
+          resetTest();
+        }
+      }
+    });
+
+    // Initialize Firebase
+    async function initFirebase() {
+      if (typeof firebase === 'undefined') {
+        console.error('Firebase not loaded');
+        return;
+      }
+
+      try {
+        // Wait for Firebase to be fully loaded
+        let retries = 0;
+        while ((!firebase.app || !firebase.auth || !firebase.firestore) && retries < 10) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          retries++;
+        }
+
+        if (!firebase.app || !firebase.auth || !firebase.firestore) {
+          console.error('Firebase modules not loaded');
+          return;
+        }
+
+        // Initialize Firebase app if not already initialized
+        if (window.__FIREBASE_CONFIG__ && (!firebase.apps || firebase.apps.length === 0)) {
+          firebase.initializeApp(window.__FIREBASE_CONFIG__);
+          console.log('Firebase initialized with project:', window.__FIREBASE_CONFIG__.projectId);
+        }
+
+        // Get Firebase services
+        state.firebaseAuth = firebase.auth();
+        state.firebaseDb = firebase.firestore();
+
+        // Auth state listener
+        state.firebaseAuth.onAuthStateChanged((user) => {
+          state.user = user;
+          updateAuthUI();
+        });
+      } catch (error) {
+        console.error('Firebase initialization error:', error);
+      }
+    }
+
+    // Update auth UI
+    function updateAuthUI() {
+      const authBtn = document.getElementById('auth-btn');
+      const userInfo = document.getElementById('user-info');
+      
+      if (state.user) {
+        authBtn.textContent = 'Sign Out';
+        userInfo.textContent = `Signed in as: ${state.user.displayName || state.user.email}`;
+        userInfo.classList.remove('hidden');
+      } else {
+        authBtn.textContent = 'Sign In';
+        userInfo.classList.add('hidden');
+      }
+    }
+
+    // Auth modal
+    const authModal = document.getElementById('auth-modal');
+    const authForm = document.getElementById('auth-form');
+    const authEmail = document.getElementById('auth-email');
+    const authPassword = document.getElementById('auth-password');
+    const authUsername = document.getElementById('auth-username');
+    const authSubmitBtn = document.getElementById('auth-submit-btn');
+    const authSwitchBtn = document.getElementById('auth-switch-btn');
+    const authCloseBtn = document.getElementById('auth-close-btn');
+    const authModalTitle = document.getElementById('auth-modal-title');
+    let isSignUp = false;
+
+    document.getElementById('auth-btn').addEventListener('click', () => {
+      if (state.user) {
+        state.firebaseAuth.signOut();
+      } else {
+        authModal.classList.add('active');
+      }
+    });
+
+    authSwitchBtn.addEventListener('click', () => {
+      isSignUp = !isSignUp;
+      authModalTitle.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+      authSubmitBtn.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+      authSwitchBtn.textContent = isSignUp ? 'Switch to Sign In' : 'Switch to Sign Up';
+      authUsername.classList.toggle('hidden', !isSignUp);
+    });
+
+    authCloseBtn.addEventListener('click', () => {
+      authModal.classList.remove('active');
+    });
+
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!state.firebaseAuth) {
+        alert('Firebase not initialized');
+        return;
+      }
+
+      try {
+        if (isSignUp) {
+          const userCredential = await state.firebaseAuth.createUserWithEmailAndPassword(
+            authEmail.value,
+            authPassword.value
+          );
+          if (authUsername.value) {
+            await userCredential.user.updateProfile({
+              displayName: authUsername.value
+            });
+          }
+        } else {
+          await state.firebaseAuth.signInWithEmailAndPassword(
+            authEmail.value,
+            authPassword.value
+          );
+        }
+        authModal.classList.remove('active');
+        authForm.reset();
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    // Leaderboard
+    const leaderboardToggle = document.getElementById('leaderboard-toggle');
+    const leaderboardContent = document.getElementById('leaderboard-content');
+    const filterButtonsContainer = document.getElementById('filter-buttons-container');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const leaderboardBody = document.getElementById('leaderboard-body');
+
+    leaderboardToggle.addEventListener('click', () => {
+      const isHidden = leaderboardContent.style.display === 'none' || leaderboardContent.style.display === '';
+      leaderboardContent.style.display = isHidden ? 'block' : 'none';
+      filterButtonsContainer.classList.toggle('hidden', !isHidden);
+      leaderboardToggle.textContent = isHidden ? 'Collapse' : 'Expand';
+      
+      if (isHidden) {
+        loadLeaderboard();
+      }
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.leaderboardFilter = btn.dataset.filter;
+        loadLeaderboard();
+      });
+    });
+
+    async function loadLeaderboard() {
+      if (!state.firebaseDb) {
+        leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Firebase not initialized</td></tr>';
+        return;
+      }
+
+      try {
+        leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Loading...</td></tr>';
+
+        // Load global leaderboard (best scores per user)
+        await loadGlobalLeaderboard();
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading leaderboard</td></tr>';
+      }
+    }
+
+    async function loadGlobalLeaderboard() {
+      try {
+        let query = state.firebaseDb.collection('globalLeaderboard')
+          .orderBy('bestScore', 'desc')
+          .limit(200);
+
+        const snapshot = await query.get();
+        const docs = [];
+        
+        snapshot.forEach(doc => {
+          docs.push(doc.data());
+        });
+
+        // Client-side date filtering
+        const now = new Date();
+        let filteredDocs = docs;
+
+        if (state.leaderboardFilter === 'month') {
+          const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          filteredDocs = docs.filter(doc => {
+            const docDate = doc.lastTestDate?.toDate ? doc.lastTestDate.toDate() : new Date(doc.lastTestDate);
+            return docDate >= monthAgo;
+          });
+        } else if (state.leaderboardFilter === 'week') {
+          const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          filteredDocs = docs.filter(doc => {
+            const docDate = doc.lastTestDate?.toDate ? doc.lastTestDate.toDate() : new Date(doc.lastTestDate);
+            return docDate >= weekAgo;
+          });
+        } else if (state.leaderboardFilter === 'day') {
+          const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+          filteredDocs = docs.filter(doc => {
+            const docDate = doc.lastTestDate?.toDate ? doc.lastTestDate.toDate() : new Date(doc.lastTestDate);
+            return docDate >= dayAgo;
+          });
+        }
+
+        // Sort by best score (descending)
+        filteredDocs.sort((a, b) => {
+          return (b.bestScore || 0) - (a.bestScore || 0);
+        });
+
+        // Limit to top 50
+        filteredDocs = filteredDocs.slice(0, 50);
+
+        if (filteredDocs.length === 0) {
+          leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No scores yet</td></tr>';
+          return;
+        }
+
+        let html = '';
+        filteredDocs.forEach((doc, index) => {
+          html += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${doc.username || 'Anonymous'}</td>
+              <td>${doc.bestScore || 0}</td>
+              <td>${doc.bestWPM || 0}</td>
+              <td>${doc.bestAccuracy || 0}%</td>
+            </tr>
+          `;
+        });
+
+        leaderboardBody.innerHTML = html;
+
+        // Show user's rank if logged in
+        if (state.user) {
+          const userRank = filteredDocs.findIndex(doc => doc.userId === state.user.uid);
+          const userRankInfo = document.getElementById('user-rank-info');
+          if (userRank !== -1) {
+            const userDoc = filteredDocs[userRank];
+            userRankInfo.textContent = `Your rank: #${userRank + 1} | Best Score: ${userDoc.bestScore || 0} | WPM: ${userDoc.bestWPM || 0} | Accuracy: ${userDoc.bestAccuracy || 0}%`;
+            userRankInfo.classList.remove('hidden');
+          } else {
+            userRankInfo.classList.add('hidden');
+          }
+        }
+      } catch (error) {
+        console.error('Error loading global leaderboard:', error);
+        leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading leaderboard</td></tr>';
+      }
+    }
+
+    // Individual Leaderboard
+    const individualLeaderboardToggle = document.getElementById('individual-leaderboard-toggle');
+    const individualLeaderboardContent = document.getElementById('individual-leaderboard-content');
+    const individualLeaderboardBody = document.getElementById('individual-leaderboard-body');
+
+    individualLeaderboardToggle.addEventListener('click', () => {
+      const isHidden = individualLeaderboardContent.style.display === 'none' || individualLeaderboardContent.style.display === '';
+      individualLeaderboardContent.style.display = isHidden ? 'block' : 'none';
+      individualLeaderboardToggle.textContent = isHidden ? 'Collapse' : 'Expand';
+      
+      if (isHidden) {
+        loadIndividualLeaderboard();
+      }
+    });
+
+    async function loadIndividualLeaderboard() {
+      if (!state.firebaseDb) {
+        individualLeaderboardBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Firebase not initialized</td></tr>';
+        return;
+      }
+
+      if (!state.user) {
+        individualLeaderboardBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Please sign in to view your test results</td></tr>';
+        return;
+      }
+
+      try {
+        individualLeaderboardBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Loading...</td></tr>';
+
+        // Load only the current user's test results
+        const query = state.firebaseDb.collection('userTests')
+          .where('userId', '==', state.user.uid)
+          .limit(100);
+
+        const snapshot = await query.get();
+        const docs = [];
+        
+        snapshot.forEach(doc => {
+          docs.push(doc.data());
+        });
+
+        // Sort by score descending client-side (avoids needing a composite index)
+        docs.sort((a, b) => (b.score || 0) - (a.score || 0));
+
+        if (docs.length === 0) {
+          individualLeaderboardBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No test results yet</td></tr>';
+          return;
+        }
+
+        let html = '';
+        docs.forEach((doc, index) => {
+          const testDate = doc.testDate?.toDate ? doc.testDate.toDate() : new Date(doc.testDate);
+          const dateStr = testDate.toLocaleDateString() + ' ' + testDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          
+          html += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${doc.username || 'Anonymous'}</td>
+              <td>${doc.score || 0}</td>
+              <td>${doc.wpm || 0}</td>
+              <td>${doc.accuracy || 0}%</td>
+              <td>${dateStr}</td>
+            </tr>
+          `;
+        });
+
+        individualLeaderboardBody.innerHTML = html;
+      } catch (error) {
+        console.error('Error loading individual leaderboard:', error);
+        individualLeaderboardBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error loading leaderboard</td></tr>';
+      }
+    }
+
+    // Initialize app
+    function initApp() {
+      initFirebase();
+      pickRandomText();
+      
+      // Auto-start the test
+      setTimeout(() => {
+        startTest();
+      }, 500);
+    }
+
+    // Start app
+    initApp();
+  </script>
+</body>
+</html>
